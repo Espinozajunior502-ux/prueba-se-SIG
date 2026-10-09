@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<title>Secadoras de cacao</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#a31f1f"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Secadoras"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--card:#fff;--btn:#ebe8df;--ink:#2a1414;--brown:#a31f1f;--bean:#c0392b;--leaf:#1f6f5b;--sand:#d9d2c3;--floor:#e6e7e1;--panel:#f8f8f5;--amber:#a8651a;--red:#b0382c;--mut:#6f675f;--line:#d4d2c9}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--floor);color:var(--ink);font-family:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.4;-webkit-tap-highlight-color:transparent}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid #2b7fff;outline-offset:2px}
+.top{background:var(--brown);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 0}
+.top-in{max-width:980px;margin:0 auto}
+.top h1{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;letter-spacing:.01em}
+.userbar{display:flex;align-items:center;gap:10px;font-size:13px;color:#fde3e0;margin:2px 0 10px;flex-wrap:wrap}
+.userbar button{background:#ffffff22;color:#fff;border-radius:8px;padding:4px 10px;font-size:13px}
+.userbar .st{margin-left:auto}
+.tabs{display:flex;gap:4px}
+.tabs button{flex:1;min-width:0;max-width:200px;padding:11px 4px;white-space:nowrap;border-radius:12px 12px 0 0;color:#fde3e0;font-weight:600;background:#ffffff14}
+.tabs button.on{background:var(--floor);color:var(--ink)}
+main{max-width:980px;margin:0 auto;padding:16px 12px calc(40px + env(safe-area-inset-bottom))}
+.card{background:var(--panel);border-radius:16px;padding:16px;margin-bottom:14px;border:1px solid var(--line)}
+.card h2{margin:0 0 10px;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700}
+.btn{padding:10px 14px;border-radius:10px;background:var(--btn);font-weight:600}
+.btn.primary{background:var(--brown);color:#fff}
+.btn.leaf{background:var(--leaf);color:#fff}
+.btn.red{background:#f5dcd8;color:var(--red)}
+.btn.sm{padding:8px 12px;font-size:14px;min-height:40px}
+.mut{color:var(--mut);font-size:14px}
+/* barra de fecha */
+.datebar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.datebar input{flex:1;min-width:150px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.datebar button{padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-weight:600}
+.daysum{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;margin-bottom:14px}
+.daysum .dt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;flex-basis:100%}
+.daysum .dn b{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;margin-right:4px}
+/* planta */
+.floor{background:#f2f2ee;border-radius:20px;border:2px solid var(--line);padding:22px 8px;display:flex;flex-direction:column;align-items:center;gap:18px;background-image:linear-gradient(#0000000a 1px,transparent 1px),linear-gradient(90deg,#0000000a 1px,transparent 1px);background-size:32px 32px}
+.row{display:flex;justify-content:center;align-items:flex-end;gap:clamp(12px,4vw,36px)}
+.dry{--d:min(25vw,128px);display:flex;flex-direction:column;align-items:center;gap:5px;width:var(--d);padding:0}
+.dry.small{--d:min(19vw,96px)}
+.disc{position:relative;width:var(--d);height:var(--d);border-radius:50%;background:conic-gradient(var(--leaf) calc(var(--p,0)*1%),var(--sand) 0);display:grid;place-items:center;box-shadow:0 3px 8px #2a141426;transition:transform .12s}
+.dry:active .disc{transform:scale(.95)}
+.hub{width:82%;height:82%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9544a,var(--brown) 70%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;box-shadow:inset 0 0 0 3px #ffffff30}
+.hub b{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:calc(var(--d)*.36)}
+.hub i{font-style:normal;font-size:calc(var(--d)*.115);margin-top:2px;opacity:.9}
+.dry.small .hub b{font-size:calc(var(--d)*.28)}
+.dry.small .hub i{font-size:calc(var(--d)*.13)}
+.dry.st-sec .hub{background:radial-gradient(circle at 35% 30%,#d79a3a,var(--amber) 70%)}
+.dry.st-seco .hub{background:radial-gradient(circle at 35% 30%,#2f9079,var(--leaf) 70%)}
+.dkg small{display:block;font-size:12px;color:var(--amber);font-weight:700}
+.cyc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
+.chip{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--btn);color:var(--mut);margin-bottom:4px}
+.chip.a{background:#f5e6cf;color:#7a4a0e}.chip.g{background:#d8ece4;color:#14503f}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rt{padding:14px 0;border-radius:10px;background:var(--card);border:1px solid var(--line);font-weight:700;font-size:17px}
+.rt.on{background:var(--brown);color:#fff;border-color:var(--brown)}
+.dkg{font-size:13px;font-weight:600;min-height:18px;color:var(--ink)}
+/* calendario */
+.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.calhead h2{margin:0}
+.calhead button{width:42px;height:42px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:18px}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd{text-align:center;font-size:13px;color:var(--mut);font-weight:600;padding:4px 0}
+.cd{min-height:68px;border-radius:10px;background:var(--card);border:1px solid var(--line);padding:4px;text-align:left;display:flex;flex-direction:column;gap:1px;font-size:11px;line-height:1.2;overflow:hidden}
+.cd.empty{background:transparent;border:0}
+.cd .n{font-weight:700;font-size:13px}
+.cd .p{color:var(--leaf);font-weight:600}
+.cd .d{color:var(--amber);font-weight:600}
+.cd.today{border:2px solid var(--brown)}
+.cd.sel{background:#e7f1ed}
+/* resumen */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.stat .l{font-size:14px;color:var(--mut)}
+.stat .v{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:34px;line-height:1.1}
+.stat .s{font-size:14px;color:var(--mut)}
+.stat.main{background:var(--brown);color:#fff;border-color:var(--brown)}
+.stat.main .l,.stat.main .s{color:#fde3e0}
+.lote{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:var(--card)}
+.lote .lh{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.lote .lh b{font-size:18px}
+.lote .big{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:26px;color:var(--leaf);white-space:nowrap}
+.lote .acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item .acts{display:flex;gap:6px;flex-shrink:0}
+table.t{width:100%;border-collapse:collapse;font-size:15px}
+table.t th{text-align:left;font-weight:600;color:var(--mut);padding:6px 4px;border-bottom:1px solid var(--line)}
+table.t td{padding:7px 4px;border-bottom:1px solid var(--line)}
+table.t td.r,table.t th.r{text-align:right}
+details summary{cursor:pointer;font-weight:600;padding:6px 0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+/* modales */
+.modal{position:fixed;inset:0;height:100vh;height:100dvh;background:#2a141488;display:none;align-items:flex-end;justify-content:center;z-index:50}
+.modal.show{display:flex}
+.sheet{background:var(--panel);width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom))}
+@media(min-width:640px){.modal{align-items:center}.sheet{border-radius:22px}}
+.sheet h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700}
+.sheet .sub{color:var(--mut);margin:2px 0 12px;font-size:14px}
+.sech{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;margin:14px 0 4px}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:14px;font-weight:600}
+.field input,.field select{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);width:100%;min-width:0;max-width:100%;min-height:48px;font-size:16px;text-overflow:ellipsis}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+.chip-b{padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:15px;min-height:40px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip-b.on{background:var(--brown);color:#fff;border-color:var(--brown)}
+body.lock{overflow:hidden}
+.prev{background:#e7f1ed;color:#14503f;border-radius:10px;padding:10px 12px;font-weight:600}
+.err{color:var(--red);font-weight:600;min-height:20px;margin:8px 0 0;font-size:14px}
+.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+/* encabezado compacto */
+.top-in{position:relative}.top h1{padding-right:56px;font-size:26px}
+#btnMenu{position:absolute;right:0;top:-4px;width:46px;height:46px;min-height:46px;padding:0;border-radius:12px;background:#ffffff22;color:#fff;display:grid;place-items:center}#btnMenu .ic{width:24px;height:24px}
+.userbar{gap:4px 10px;margin:4px 0 10px}#uemail{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}.roletag{font-size:12px}
+.userbar select{flex:1 1 100%;max-width:100%;min-height:40px;font-size:13px;padding:6px 8px}
+#menuPanel{position:absolute;right:0;top:46px;z-index:60;min-width:240px;background:var(--panel);color:var(--ink);border-radius:14px;box-shadow:0 12px 32px #0007;padding:6px;flex-direction:column;animation:sheetup .18s ease}
+#menuPanel:not([hidden]){display:flex}
+#menuPanel button{background:none;color:var(--ink);width:100%;text-align:left;border-radius:10px;padding:10px 12px;font-size:15px;min-height:48px;align-items:center}
+#menuPanel button:not([hidden]){display:flex}#menuPanel button:active{background:var(--btn)}
+#spaceBanner{padding:8px 12px;font-size:13px;gap:6px 10px}#spaceBanner button{min-height:40px;padding:6px 14px;font-size:13px}
+/* v1.2 */
+button,.btn,.chip-b{min-height:48px}.userbar button{min-height:40px;padding:6px 12px}.rt{min-height:52px}.eye{min-height:36px}
+.datebar button,.calhead button{min-width:48px;min-height:48px}
+.ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:6px}.ic.n{margin:0}
+main>section{animation:tabin .25s ease}@keyframes tabin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){main>section,.modal.show .sheet{animation:none}}
+#sst::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:#4ade80}#sst[data-s=off]::before{background:#fbbf24}
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:18px 12px;color:var(--mut)}.empty .ic{width:34px;height:34px;margin:0 0 4px;opacity:.6}.empty b{color:var(--ink);font-size:15px}.empty span{font-size:14px}
+#skel{display:none}body.loading #skel{display:block}body.loading main>section{display:none!important}
+.sk{height:18px;border-radius:10px;margin:12px 0;background:linear-gradient(90deg,var(--sand) 25%,var(--card) 50%,var(--sand) 75%);background-size:200% 100%;animation:shim 1.2s linear infinite}.sk.b{height:70px;border-radius:16px}
+.skd{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}.skd .sk{height:auto;aspect-ratio:1;border-radius:50%;margin:0}@keyframes shim{to{background-position:-200% 0}}
+html[data-t=dark]{color-scheme:dark;--card:#2a2423;--btn:#3a3230;--ink:#f2e9e6;--floor:#161212;--panel:#211c1b;--sand:#3d3532;--line:#3a3230;--mut:#b8aca7}
+html[data-t=dark] .floor{background-color:#1b1615}html[data-t=dark] .cd.sel{background:#24352f}
+html[data-t=dark] input,html[data-t=dark] select{color:var(--ink)}
+/* pulido */
+.btn{min-height:44px}.tabs button{min-height:44px}button:active{transform:scale(.97)}
+.modal.show .sheet{animation:sheetup .25s ease}@keyframes sheetup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:#2a1414;color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:14px;max-width:90vw;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:300;box-shadow:0 6px 20px #0005}
+#toast.show{opacity:1;transform:translate(-50%,0)}#toast.err{background:var(--red)}
+.authlogo{width:64px;height:64px;border-radius:50%;background:var(--brown);display:grid;place-items:center;margin:0 auto 10px;box-shadow:0 4px 12px #a31f1f55}
+.authbox h2,.authbox>p{text-align:center}
+.pwrap{position:relative}.pwrap input{padding-right:84px}.eye{position:absolute;right:6px;top:6px;height:36px;padding:0 12px;border-radius:8px;background:var(--btn);font-size:13px;font-weight:600}
+#dlg .sheet{max-width:380px;text-align:center;padding:22px}#dlgBody{font-size:16px;line-height:1.45;margin-bottom:6px}#dlgBody small{color:var(--mut)}#dlg .ma{justify-content:center}
+/* mensaje de carga */
+#loadMsg{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(40px + env(safe-area-inset-top)) 24px calc(28px + env(safe-area-inset-bottom));color:#fff;text-align:center;background:radial-gradient(circle at 50% 35%,#c93a33 0,var(--brown) 55%,#6e1212 100%);opacity:1;transition:opacity .25s ease}
+#loadMsg.show{display:flex}
+#loadMsg.out{opacity:0}
+.ld-top{height:1px}
+.ld-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;width:100%;max-width:340px}
+.ld-logo{position:relative;width:112px;height:112px;display:grid;place-items:center;margin-bottom:6px}
+.ld-logo::before,.ld-logo::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #ffffff66;animation:ldpulse 1.6s ease-out infinite}
+.ld-logo::after{animation-delay:.8s}
+.ld-core{width:88px;height:88px;border-radius:50%;background:#ffffff1f;border:2px solid #ffffff77;display:grid;place-items:center;animation:ldfloat 1.4s ease-in-out infinite;box-shadow:0 8px 24px #00000040}
+.ld-core svg{width:50px;height:50px}
+@keyframes ldpulse{from{transform:scale(.8);opacity:.9}to{transform:scale(1.55);opacity:0}}
+@keyframes ldfloat{50%{transform:translateY(-6px)}}
+#loadMsg h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;letter-spacing:.3px;animation:ldup .5s ease both}
+.ld-dots span{animation:lddot 1.2s infinite both}
+.ld-dots span:nth-child(2){animation-delay:.2s}.ld-dots span:nth-child(3){animation-delay:.4s}
+@keyframes lddot{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.ld-step{position:relative;height:22px;width:100%;font-size:15px;color:#fde3e0}
+.ld-step span{position:absolute;inset:0;opacity:0;animation:ldstep 1s ease both}
+.ld-step span:nth-child(1){animation-delay:.05s}
+.ld-step span:nth-child(2){animation-delay:.85s}
+.ld-step span:nth-child(3){animation-delay:1.65s;animation-name:ldstepend}
+@keyframes ldstep{0%{opacity:0;transform:translateY(6px)}20%,80%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-6px)}}
+@keyframes ldstepend{0%{opacity:0;transform:translateY(6px)}30%,100%{opacity:1;transform:none}}
+.ld-bar{width:100%;height:7px;border-radius:99px;background:#ffffff33;overflow:hidden}
+.ld-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fff,#ffd9d4);border-radius:99px;animation:ldfill 2.5s cubic-bezier(.3,.6,.3,1) forwards}
+@keyframes ldfill{to{width:100%}}
+.ld-dev{background:#00000026;border:1px solid #ffffff33;border-radius:18px;padding:14px 22px;line-height:1.35;animation:ldup .4s .05s ease both}
+.ld-dev small{display:block;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:#fde3e0;opacity:.85}
+.ld-dev b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:24px;margin:2px 0 8px}
+.ld-dev em{font-style:normal;display:inline-block;background:#ffffff26;border-radius:999px;padding:4px 14px;font-size:14px;font-weight:600}
+@keyframes ldup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#loadMsg *,#loadMsg *::before,#loadMsg *::after{animation-duration:.01s!important;animation-iteration-count:1!important;animation-delay:0s!important}}
+/* acceso */
+#auth{position:fixed;inset:0;z-index:100;background:var(--brown);display:none;align-items:center;justify-content:center;padding:18px}
+#auth.show{display:flex}
+.authbox{background:var(--panel);border-radius:20px;padding:24px;width:100%;max-width:380px}
+.authbox h2{margin:0 0 4px;font-family:'Barlow Condensed',sans-serif;font-size:30px}
+.authbox p{margin:0 0 14px;color:var(--mut);font-size:14px}
+.authbox input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:var(--card)}
+.authbox .row2{display:flex;gap:8px}.authbox .row2 button{flex:1}
+@media(max-width:360px){.tabs button{font-size:14px}}
+.kvs{margin:6px 0}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
+.kv span{color:var(--mut)}.kv b{text-align:right;font-weight:600}
+.tchart{width:100%;height:auto;display:block;margin:8px 0;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.tchart .gl{stroke:var(--line);stroke-width:1}.tchart .ln{fill:none;stroke:var(--amber);stroke-width:2.5;stroke-linejoin:round}
+.tchart .dt{fill:var(--amber);stroke:#fff;stroke-width:1.5}.tchart text{font-size:10px;fill:var(--mut)}
+.hf{display:flex;gap:8px;margin-bottom:10px}
+.hf select{flex:1;min-width:0;min-height:46px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:16px;text-overflow:ellipsis}
+#cycM{z-index:60}
+@media(max-width:420px){.cd{font-size:10px;padding:3px;min-height:60px}.cd .n{font-size:12px}.top h1{font-size:25px}.item{flex-direction:column}.item .acts{width:100%}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.userbar select{background:#ffffff22;color:#fff;border:0;border-radius:8px;padding:5px 6px;font-size:12px;max-width:52vw}
+.userbar select option{color:#111}.roletag{font-weight:700;color:#fde68a}
+.shi{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #e5e7eb}
+.shi .shm{flex:1;min-width:0;overflow-wrap:anywhere;font-size:14px}
+.shi select{padding:8px;border:1px solid #d4d4d8;border-radius:10px;background:var(--card);font-size:14px;min-height:40px}
+.shmut{color:#6b7280;font-size:14px}
+@media print{.roletag{display:none}}
+body.ro #blkStart,body.ro #blkDrying,body.ro #blkBag,body.ro #blkDone{display:none!important}
+body.ro [onclick*="delEnt("],body.ro [onclick*="editEntry("],body.ro [onclick*="delEv("],body.ro [onclick*="openDisp("],body.ro [onclick*="delDisp("],body.ro [onclick*="renameLote("],body.ro [onclick*="openDryer("][onclick*=",'"]{display:none!important}
+#spaceBanner{background:#fde68a;color:#422006;padding:10px 14px;font-weight:600;font-size:14px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+#spaceBanner[hidden]{display:none}
+#spaceBanner button{background:#422006;color:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700}
+@media print{#spaceBanner{display:none!important}}
+.btn.small{padding:8px 12px;font-size:14px;min-height:40px}
+
+/* v1.3: barra inferior y aviso */
+.top{padding-bottom:12px}body .userbar select{flex:1 1 100%;max-width:100%}
+body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -4px 18px #0002;transition:transform .28s ease}
+nav.tabs.hide{transform:translateY(115%)}
+nav.tabs button{max-width:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;padding:6px 4px;border-radius:14px;background:none;color:var(--mut);font-size:12px;font-weight:700}
+nav.tabs button .ic{width:24px;height:24px;margin:0}
+nav.tabs button.on{background:var(--btn);color:var(--brown)}
+html[data-t=dark] nav.tabs button.on{color:#ff9a90}
+body #toast{bottom:calc(92px + env(safe-area-inset-bottom))}
+body #spaceBanner{display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:12px;margin:12px 12px 0;padding:12px 14px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-left:5px solid #e6a516;border-radius:14px;box-shadow:0 2px 10px #0002;text-align:left;font-weight:500}
+body #spaceBanner[hidden]{display:none}
+body #spaceBanner::before{content:"";flex:none;width:36px;height:36px;border-radius:50%;background:#e6a51626 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d99a0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center/20px no-repeat}
+#spaceBanner .bt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+#spaceBanner small{font-size:12px;color:var(--mut)}#spaceBanner b{font-size:14px;overflow:hidden;text-overflow:ellipsis}#spaceBanner em{font-style:normal;font-size:12px;font-weight:700;color:#b97d00}
+html[data-t=dark] #spaceBanner em{color:#f0b429}
+body #spaceBanner button{flex:none;min-height:40px;padding:6px 14px;background:none;color:var(--ink);border:1.5px solid #e6a516;border-radius:999px;font-size:13px;font-weight:700}
+@media(max-width:380px){body #spaceBanner{flex-wrap:wrap}body #spaceBanner button{width:100%}}
+
+/* v1.4: estilo iOS Liquid Glass */
+:root{--sf:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",system-ui,sans-serif;--floor:#f2f2f7;--line:rgba(60,60,67,.14);--ish:0 12px 32px rgba(31,38,54,.10),0 2px 6px rgba(31,38,54,.05);--glass:rgba(250,250,252,.78);--glassb:rgba(255,255,255,.85)}
+html[data-t=dark]{--glass:rgba(38,33,33,.74);--glassb:rgba(255,255,255,.10);--ish:0 12px 32px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3);--line:rgba(255,255,255,.12)}
+body *{font-family:var(--sf)!important}
+.top h1{font-size:25px;font-weight:800;letter-spacing:-.03em}
+.sheet h2,.card h2,.authbox h2,#loadMsg h2,.sech{font-weight:800;letter-spacing:-.02em}
+.stat .v,.daysum .dn b,.lote .big,.hub b{font-weight:800;letter-spacing:-.04em}.stat .v{font-size:30px}.daysum .dn b{font-size:28px}
+.top{border-radius:0 0 28px 28px;background:linear-gradient(180deg,#b3261e,#9a1b1b);box-shadow:0 10px 28px rgba(140,20,20,.28);position:relative;z-index:5}
+.cyc,.lote,.stat,.card,.item{border:0;border-radius:20px;box-shadow:var(--ish)}
+.floor{border:0;border-radius:28px;background-color:#fbfbfd;box-shadow:var(--ish)}
+.cd{border-radius:14px;border-color:transparent;box-shadow:0 1px 3px rgba(31,38,54,.08)}.cd.today{border:2px solid var(--brown)}
+.rt{border:0;border-radius:14px;box-shadow:0 1px 3px rgba(31,38,54,.1)}
+.btn{border-radius:14px;font-weight:650}.btn.primary{background:linear-gradient(180deg,#c0392b,#a31f1f);box-shadow:0 6px 16px rgba(163,31,31,.32)}
+.chip-b,.datebar button,.calhead button{border:0;border-radius:14px;box-shadow:0 1px 3px rgba(31,38,54,.1)}
+.field input,.field select,.datebar input,.authbox input,.hf select,.shi select{background:rgba(120,120,128,.12);border:0;border-radius:14px}
+.field input:focus,.field select:focus,.authbox input:focus{outline:2px solid #0a84ff;background:var(--card)}
+body .modal{background:rgba(15,10,10,.38);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
+body .sheet{background:var(--glass);-webkit-backdrop-filter:blur(28px) saturate(175%);backdrop-filter:blur(28px) saturate(175%);border:1px solid var(--glassb);border-radius:28px 28px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.2)}
+body .sheet::before{content:"";display:block;width:38px;height:5px;border-radius:3px;background:rgba(120,120,128,.35);margin:-4px auto 12px}
+@media(min-width:640px){body .sheet{border-radius:28px}}
+.authbox{background:var(--glass);-webkit-backdrop-filter:blur(28px) saturate(175%);backdrop-filter:blur(28px) saturate(175%);border:1px solid var(--glassb);border-radius:30px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+#auth{background:radial-gradient(circle at 50% 20%,#d0463c,#a31f1f 55%,#6e1212)}
+#menuPanel{background:var(--glass);-webkit-backdrop-filter:blur(28px) saturate(175%);backdrop-filter:blur(28px) saturate(175%);border:1px solid var(--glassb);border-radius:22px}
+body #toast{background:rgba(30,30,32,.86);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:18px}body #toast.err{background:rgba(214,48,38,.92)}
+body #spaceBanner{background:var(--glass);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);border:1px solid var(--glassb);border-left:1px solid var(--glassb);border-radius:20px;box-shadow:var(--ish)}
+nav.tabs{left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));padding:6px;gap:2px;border:1px solid var(--glassb);border-radius:28px;background:var(--glass);-webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);box-shadow:0 16px 44px rgba(31,38,54,.22),0 2px 8px rgba(31,38,54,.08);transition:transform .32s cubic-bezier(.22,.8,.24,1),opacity .22s ease}
+nav.tabs.hide{transform:translateY(calc(100% + 28px));opacity:0;pointer-events:none}
+nav.tabs button{border-radius:22px;min-height:54px}nav.tabs button.on{background:rgba(163,31,31,.13);color:var(--brown)}
+html[data-t=dark] nav.tabs button.on{background:rgba(255,154,144,.16)}
+body{padding-bottom:calc(96px + env(safe-area-inset-bottom))}body #toast{bottom:calc(104px + env(safe-area-inset-bottom))}
+@media(prefers-reduced-motion:reduce){nav.tabs{transition:none}}
+
+/* v1.4.1: barra de estado y barra inferior */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#b3261e;z-index:45;pointer-events:none}
+nav.tabs{bottom:max(8px,calc(env(safe-area-inset-bottom) - 14px));padding:5px;border-radius:26px}
+nav.tabs button{min-height:50px;border-radius:21px}nav.tabs button .ic{width:22px;height:22px}
+body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}body #toast{bottom:calc(92px + env(safe-area-inset-bottom))}
+.item.pr{border-left:6px solid var(--line);padding-left:12px;padding-right:8px;margin:8px 0;border-radius:0 12px 12px 0;border-bottom:0}
+.item.pr.ps{border-left-color:var(--amber);background:rgba(168,101,26,.14)}
+.item.pr.pg{border-left-color:var(--leaf);background:rgba(31,111,91,.15)}
+.stl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700;margin-top:4px}
+.stl .chip{margin-bottom:0}
+.pr.ps .stl{color:#9a5a12}.pr.pg .stl{color:#17705a}
+html[data-t=dark] .pr.ps .stl{color:#f0b35c}html[data-t=dark] .pr.pg .stl{color:#6fd1b4}
+html[data-t=dark] .pr.ps .chip.a{background:#5a3d12;color:#ffd9a0}html[data-t=dark] .pr.pg .chip.g{background:#17463a;color:#a8ecd6}
+/* ventanas: asa para deslizar */
+.sheet::before{content:'';display:block;width:44px;height:5px;border-radius:3px;background:var(--mut);opacity:.45;margin:-8px auto 12px}
+.sheet{touch-action:pan-y}
+/* estado bien visible en RESUMEN */
+.item.pr{border-left-width:8px}
+.item.pr.ps{border-left-color:#d98a1c;background:rgba(217,138,28,.20)}
+.item.pr.pg{border-left-color:#18805f;background:rgba(24,128,95,.20)}
+.pr.ps .stl .chip{background:#d98a1c;color:#fff}
+.pr.pg .stl .chip{background:#18805f;color:#fff}
+.pr.ps .stl{color:#8a4d06}.pr.pg .stl{color:#0f5f46}
+.pr .stl span::before{content:'';display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:currentColor}
+html[data-t=dark] .pr.ps .stl .chip{background:#b8741a;color:#fff}html[data-t=dark] .pr.pg .stl .chip{background:#1f8f6c;color:#fff}
+html[data-t=dark] .pr.ps .stl{color:#f5c070}html[data-t=dark] .pr.pg .stl{color:#7fe0c3}
+/* cerrar ventanas */
+.sheet{touch-action:pan-y}
+.sheet::before{height:6px;margin:-8px auto 14px;position:sticky;top:0}
+.sheet .grab{display:block}
+.modal{touch-action:none}.modal .sheet{touch-action:pan-y}
+
+/* tarjetas: texto con margen interno */
+.item{padding:12px 14px;gap:12px}
+.item>div:first-child{flex:1;min-width:0;overflow-wrap:anywhere}
+.item.pr{padding:12px 14px 12px 14px}
+.cyc{padding:14px 16px;overflow-wrap:anywhere}
+.lote,.stat{overflow-wrap:anywhere}
+.who{font-size:13px;color:var(--mut);margin-top:2px}.who b{color:var(--ink)}
+.item .acts{align-self:center}
+@media(max-width:420px){.item .acts{align-self:stretch}}
+
+/* animaciones de secadoras */
+.hub{position:relative;overflow:hidden}.hub b,.hub i{position:relative;z-index:1}
+.dry.st-sec .hub b,.dry.st-sec .hub i,.dry.air .hub b,.dry.air .hub i,.dry.st-seco .hub b,.dry.st-seco .hub i{text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.blades{position:absolute;inset:0;pointer-events:none;animation:bspin 7s linear infinite}
+.blades::after{content:"";position:absolute;left:calc(50% - 4px);top:calc(50% - 4px);width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.7)}
+.blades i{position:absolute;left:calc(50% - 1.5px);top:50%;width:3px;border-radius:3px;background:rgba(255,255,255,.55);transform-origin:50% 0}
+.blades i:nth-child(1){height:43%}.blades i:nth-child(2){height:31%;transform:rotate(155deg)}
+@keyframes bspin{to{transform:rotate(360deg)}}
+.sack{position:absolute;inset:8%;width:84%;height:84%;opacity:.55;pointer-events:none}
+.sack .sb{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
+.sack .sf{fill:#e8c07a;transform-box:fill-box;transform-origin:50% 100%;animation:skfill 3.2s ease-in-out infinite}
+.sack .sv{stroke:#fff;fill:#fff;stroke-width:2.4;stroke-linecap:round;transform-origin:8px 8px;animation:skdig 1.6s ease-in-out infinite}
+.sack .gr{fill:#e8c07a;opacity:0;animation:skgr 1.6s ease-in infinite}
+@keyframes skfill{0%{transform:scaleY(.08)}85%,100%{transform:scaleY(1)}}
+@keyframes skdig{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(14deg)}}
+@keyframes skgr{0%,40%{transform:translateY(0);opacity:0}50%{opacity:1}100%{transform:translateY(16px);opacity:0}}
+@media(prefers-reduced-motion:reduce){.blades,.sack .sv,.sack .sf,.sack .gr{animation:none}.sack .sf{transform:scaleY(.7)}}
+
+/* tarjetas con un solo botón: botón al lado */
+@media(max-width:420px){.item:has(.acts>button:only-child){flex-direction:row;align-items:center}.item:has(.acts>button:only-child) .acts{width:auto;align-self:center}.item .acts>button:only-child{min-width:44px;min-height:44px;padding:0 14px}}
+
+/* resumen v1.5 */
+#actCard[hidden]{display:none}
+#resStats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px}#resStats .stat{margin:0}#resStats .stat .v{font-size:24px}
+.hs{cursor:pointer;list-style:none;font-size:20px;font-weight:800;letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:center;min-height:32px}
+.hs::-webkit-details-marker{display:none}.hs::after{content:"";width:9px;height:9px;border-right:2.5px solid var(--mut);border-bottom:2.5px solid var(--mut);transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+details[open]>.hs::after{transform:rotate(-135deg)}#histBox[open]>.hs{margin-bottom:10px}
+.ldet{margin-top:10px;border-radius:16px;background:rgba(120,120,128,.09);padding:0 12px 4px}
+.ldet>summary{cursor:pointer;list-style:none;font-weight:700;padding:12px 0;display:flex;justify-content:space-between;align-items:center}.ldet>summary::-webkit-details-marker{display:none}
+.ldet>summary::after{content:"";width:8px;height:8px;border-right:2.5px solid var(--mut);border-bottom:2.5px solid var(--mut);transform:rotate(45deg);transition:transform .2s}.ldet[open]>summary::after{transform:rotate(-135deg)}
+.ld-bar{display:flex;height:14px;border-radius:8px;overflow:hidden;gap:2px}.ld-bar i{display:block;min-width:4px}
+.ld-leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;margin:8px 0 10px}.ld-leg span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:5px}
+.ld-kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}.ld-kpi div{background:var(--card);border-radius:12px;padding:8px 4px;text-align:center;font-size:12px;color:var(--mut)}.ld-kpi b{display:block;font-size:17px;color:var(--ink)}
+.ld-dry{background:var(--card);border-radius:16px;padding:12px;margin-bottom:10px;border-left:6px solid var(--c);box-shadow:0 1px 3px rgba(31,38,54,.1)}
+.ld-dry h4{margin:0 0 4px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:15px}.ld-dry .mut{font-size:13px;margin-top:3px}
+.spk{display:inline-flex;align-items:flex-end;gap:2px;height:20px;vertical-align:middle;margin-left:8px}.spk i{width:5px;background:var(--c);border-radius:2px;opacity:.85}
+
+/* resumen: en las secadoras */
+.ps{flex-wrap:wrap}.ps .pt{order:1;flex:1}.ps::after{order:2}.ps .psum{order:3;flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:13px;font-weight:600;letter-spacing:0}
+.ps .phint{order:4;flex-basis:100%;margin-top:6px;font-size:12px;font-weight:500;color:var(--mut);letter-spacing:0}#procBox[open]>.ps .phint{display:none}#procBox[open]>.ps{margin-bottom:10px}
+.pc{padding:5px 11px;border-radius:999px}.pc b{font-weight:800}.pc.a{background:rgba(217,138,28,.18);color:#a8651a}.pc.g{background:rgba(24,128,95,.18);color:#18805f}.pc.n{background:rgba(120,120,128,.15);color:var(--mut)}
+html[data-t=dark] .pc.a{color:#f0b429}html[data-t=dark] .pc.g{color:#4ade80}
+
+/* v1.6: producción y aviso de versión */
+#prodBox[open]>.ps .phint{display:none}#prodBox[open]>.ps{margin-bottom:10px}
+.seg{display:flex;gap:4px;padding:3px;background:rgba(120,120,128,.14);border-radius:12px;margin-bottom:12px}.seg button{flex:1;min-height:36px;border-radius:10px;background:none;font-weight:700;color:var(--mut);box-shadow:none}.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.bars{display:flex;align-items:flex-end;gap:5px;height:200px;padding-top:6px}.bc{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.bc i{display:block;width:100%;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#c0392b,#a31f1f);transition:height .4s ease}.bc:last-child i{background:linear-gradient(180deg,#f0b429,#d98a1c)}
+.bv{font-size:10px;font-weight:700;margin-bottom:3px;white-space:nowrap}.bl{font-size:10px;color:var(--mut);margin-top:5px;white-space:nowrap}
+#updBar{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top) + 8px);z-index:250;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 8px 8px 16px;border-radius:999px;background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--glassb);box-shadow:0 10px 30px rgba(0,0,0,.3);font-weight:600;font-size:14px;animation:sheetup .3s ease}
+#updBar button{min-height:40px;padding:0 16px;border-radius:999px}
+
+/* v1.7: teclado, eventos por tipo, fase de aire */
+.rdisp{display:flex;align-items:baseline;justify-content:center;gap:8px;font-size:46px;font-weight:800;letter-spacing:-.03em;margin:2px 0 10px}.rdisp small{font-size:15px;color:var(--mut);font-weight:600}
+.rate .rt{min-height:58px;font-size:22px;font-weight:700}
+.evh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin:16px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}.evh b{font-size:15px}.evh span{font-size:12px;color:var(--mut)}
+.dry.air .hub{background:radial-gradient(circle at 35% 30%,#5fb4d8,#2a7fa8 70%)}
+.fan{position:absolute;inset:8%;width:84%;height:84%;opacity:.5;pointer-events:none}.fan .fb{fill:#fff;transform-origin:30px 30px;animation:fspin .9s linear infinite}
+@keyframes fspin{to{transform:rotate(360deg)}}
+.pc.b{background:rgba(42,127,168,.18);color:#2a7fa8}html[data-t=dark] .pc.b{color:#6cc3ea}
+#btnDry:disabled{opacity:.45}
+@media(prefers-reduced-motion:reduce){.fan .fb{animation:none}}
+
+/* ===== Lotes y trazabilidad: ficha, QR, impresión ===== */
+.lcode{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.07em;color:var(--mut)}
+.fst{font-weight:800;font-size:12px;padding:2px 9px;border-radius:999px;background:#d8ece4;color:#14503f;letter-spacing:.04em}.fst.c{background:var(--btn);color:var(--mut)}
+.fsaco{background:#fde68a;color:#422006;border-radius:14px;padding:10px 12px;margin-bottom:10px;font-size:14px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.fgrid>div{background:rgba(120,120,128,.09);border-radius:14px;padding:10px 12px;min-width:0;overflow-wrap:anywhere}
+.fgrid b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;line-height:1.15}
+.fgrid span{font-size:12px;color:var(--mut)}
+.fo{margin:9px 0}.fo div{display:flex;justify-content:space-between;gap:8px;font-size:14px}.fo i{display:block;height:8px;border-radius:4px;background:var(--leaf);margin-top:3px}
+.fmov{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.fmov .kg{font-weight:800;text-align:right}.fmov .kg.in{color:var(--leaf)}.fmov .kg.out{color:var(--red)}
+.fmov .bal{grid-column:2;text-align:right;font-size:12px;color:var(--mut)}
+.qrbox{display:inline-block;background:#fff;padding:8px;border-radius:14px;margin:8px 0}
+.qrbox svg{display:block;width:220px;height:220px}
+#fiTabs{margin:8px 0 10px}#fiTabs .chip-b{padding:6px 12px;min-height:38px;font-size:14px}
+body.ro [onclick*="editMeta("]{display:none!important}
+#printArea{display:none}
+.plb{display:grid;grid-template-columns:1fr 1fr;padding:8mm;width:210mm;box-sizing:border-box}
+.pl{height:54mm;border:.3mm dashed #888;padding:3mm;display:flex;gap:3mm;align-items:center;break-inside:avoid;overflow:hidden;color:#000;font-family:Barlow,Arial,sans-serif}
+.pl svg{width:36mm;height:36mm;min-width:36mm;min-height:36mm;display:block;flex:none}.pl-t{min-width:0}.pl-t small{display:block;font-size:3mm;font-weight:700;letter-spacing:.2em}
+.pl-t b{display:block;font-family:'Barlow Condensed',Arial,sans-serif;font-size:5.8mm;line-height:1;white-space:nowrap}
+.pl-s{font-family:'Barlow Condensed',Arial,sans-serif;font-weight:700;font-size:6.2mm;margin:1.5mm 0;border:.5mm solid #000;display:inline-block;padding:0 2mm;border-radius:1.5mm}
+.pl-t span{display:block;font-size:3.2mm;overflow-wrap:anywhere}
+
+.fhead{display:flex;align-items:center;gap:10px;background:#1f5a3f;color:#fff;border-radius:16px;padding:12px 14px;margin-bottom:10px}
+.fhead svg{width:38px;height:38px;flex:none}.fhead b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:26px;letter-spacing:.03em;line-height:1}.fhead span{font-size:12px;opacity:.9}
+.fbar{background:#1f5a3f;color:#fff;font-weight:800;font-size:13px;letter-spacing:.06em;border-radius:10px;padding:8px 12px;margin-bottom:10px}
+.fcard{background:rgba(120,120,128,.09);border-radius:16px;padding:12px;margin-bottom:10px}
+.fcode{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.fcode b{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;letter-spacing:.01em}
+.fgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.fgrid3>div{min-width:0}.fgrid3 span{display:block;font-size:11px;color:var(--mut)}.fgrid3 b{font-size:15px;overflow-wrap:anywhere}
+.fcmp{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.fcard table.t{width:100%;margin-top:6px}.fcard table.t td,.fcard table.t th{font-size:13px;padding:6px 4px}
+.flink{background:none;color:var(--leaf);font-weight:700;font-size:13px;min-height:36px;padding:6px 0}
+.frow{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;text-align:left;background:none;border-bottom:1px solid var(--line);border-radius:0;padding:12px 2px;min-height:56px}
+.frow span{min-width:0}.frow b{display:block;font-size:15px}.frow small{display:block;color:var(--mut);font-size:12px;font-weight:400}
+.frow i{width:8px;height:8px;border-right:2.5px solid var(--mut);border-top:2.5px solid var(--mut);transform:rotate(45deg);flex:none}
+.ffoot{display:flex;justify-content:space-between;gap:10px;margin-top:12px;background:#d8ece4;color:#14503f;border-radius:12px;padding:8px 12px;font-size:12px}
+.fsec{margin:6px 0 8px;font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800}
+html[data-t=dark] .ffoot{background:#17463a;color:#a8ecd6}
+.pfc{width:210mm;height:148mm;padding:4mm;box-sizing:border-box;overflow:hidden;color:#17251d;background:#fff;font-family:Barlow,Arial,sans-serif;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pfc+.pfc{page-break-before:always}
+.pfc *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pfh{height:17mm;background:#1f5a3f;color:#fff;border-radius:2mm 2mm 0 0;display:flex;align-items:center;gap:3mm;padding:0 4mm}
+.pfh svg{width:11mm;height:11mm;flex:none}.pfh-b b{display:block;font-family:'Barlow Condensed',Arial,sans-serif;font-size:8mm;line-height:1;letter-spacing:.02em}.pfh-b i{font-size:3mm;font-style:normal;opacity:.9}
+.pfh-m{flex:1;border-left:.3mm solid rgba(255,255,255,.55);border-right:.3mm solid rgba(255,255,255,.55);padding:0 4mm;font-weight:600;font-size:3.9mm;line-height:1.25}
+.pfh-t{font-size:2.7mm;font-weight:700;line-height:1.3;letter-spacing:.04em}
+.pfb{display:flex;justify-content:space-between;gap:3mm;margin-top:1.5mm;background:#e6eee8;border-radius:1.5mm;padding:2mm 3mm;align-items:center}
+.pfb-l{flex:1;min-width:0}.pfb-l small{display:block;font-size:3.6mm;font-weight:700;letter-spacing:.06em}
+.pf-code{font-family:'Barlow Condensed',Arial,sans-serif;font-weight:700;font-size:15mm;line-height:1;white-space:nowrap;margin-bottom:1mm}
+.pf-st{display:inline-block;background:#1f5a3f;color:#fff;border-radius:99mm;padding:.8mm 4mm;font-weight:800;font-size:3.8mm;letter-spacing:.05em}.pf-st.c{background:#555}
+.pfb-q{width:32mm;text-align:center;flex:none}.pfb-q svg{width:24mm;height:24mm;display:block;margin:0 auto}.pfb-q small{font-size:2.4mm;line-height:1.15;display:block}
+.pfr{display:grid;grid-template-columns:1.05fr 1.3fr 1fr;border-bottom:.3mm solid #cdd8d0}
+.pfr>div{padding:1.6mm 2.5mm;border-left:.3mm solid #cdd8d0;min-width:0}.pfr>div:first-child{border-left:0}
+.pfr h4{margin:0 0 .8mm;font-size:3.5mm;letter-spacing:.04em;color:#1f5a3f;text-transform:uppercase}
+.pfr p{margin:0;font-size:3.1mm;line-height:1.38;display:flex;justify-content:space-between;gap:2mm}.pfr p span{color:#4a5a50}.pfr p b{font-weight:600;text-align:right;overflow-wrap:anywhere}
+.pfr .one{display:block;font-size:4.2mm;font-weight:700}.pfr .sm{display:block;font-size:3.2mm}
+.pf-bc svg{width:100%;height:11mm;display:block}.pf-bc div{text-align:center;font-size:3.6mm;letter-spacing:.08em;margin-top:.5mm}
+.pf-f{position:absolute;left:4mm;right:4mm;bottom:3.5mm;display:flex;justify-content:space-between;gap:4mm;font-size:2.8mm;border-top:.3mm solid #cdd8d0;padding-top:1mm}
+@media print{body.pf>*:not(#printArea){display:none!important}body.pf #printArea{display:block!important}html,body.pf{background:#fff!important;height:auto!important;overflow:visible!important}}
+</style></head>
+<body class="loading">
+<nav class="tabs">
+<button id="tb-sec" class="on" onclick="setTab('sec')">Secadoras</button>
+<button id="tb-cal" onclick="setTab('cal')">Calendario</button>
+<button id="tb-res" onclick="setTab('res')">Resumen</button>
+</nav><div id="toast" role="status" aria-live="polite"></div>
+<div id="dlg" class="modal" onclick="if(event.target===this)closeM('dlg')"><div class="sheet"><div id="dlgBody"></div><div class="ma" id="dlgBtns"></div></div></div>
+<div id="loadMsg" class="show" role="status" aria-live="polite">
+<div class="ld-top"></div>
+<div class="ld-mid">
+<div class="ld-logo"><div class="ld-core"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 6c-3 0-5 2-5 5" /><path d="M32 8c13 4 21 17 21 28 0 10-8 20-21 20S11 46 11 36C11 25 19 12 32 8z" fill="#ffffff22"/><path d="M32 10c-7 10-7 38 0 46M32 10c7 10 7 38 0 46M20 16c-5 12-4 28 4 38M44 16c5 12 4 28-4 38"/></svg></div></div>
+<h2>Cargando tus datos<span class="ld-dots"><span>.</span><span>.</span><span>.</span></span></h2>
+<div class="ld-step"><span>Conectando con tu espacio</span><span>Sincronizando tus lotes</span><span>Preparando tus secadoras</span></div>
+<div class="ld-bar"><i></i></div>
+</div>
+<div class="ld-dev"><small>Aplicación desarrollada por</small><b>Junior Velez</b><em>Telf: 0998611246</em></div>
+</div>
+<div id="auth"><div class="authbox"><div class="authlogo"><svg viewBox="0 0 64 64" width="38" height="38" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 8c13 4 21 17 21 28 0 10-8 20-21 20S11 46 11 36C11 25 19 12 32 8z" fill="#ffffff22"/><path d="M32 10c-7 10-7 38 0 46M32 10c7 10 7 38 0 46"/></svg></div><h2>Secadoras de cacao</h2><p id="authmsg">Inicia sesión para ver tus datos.</p>
+<input id="aem" type="email" placeholder="Correo" autocomplete="username">
+<div class="pwrap"><input id="apw" type="password" placeholder="Contraseña (mínimo 6 caracteres)" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"><button type="button" class="eye" id="eyeBtn" onclick="togglePw()">Ver</button></div>
+<div id="autherr" class="err"></div><div id="authok" style="color:#1c7a4f;font-size:13px;font-weight:600;min-height:0;margin-bottom:6px"></div><button type="button" onclick="doReset()" style="background:none;border:0;color:#2b6cb0;text-decoration:underline;font-size:14px;padding:8px 0;margin-bottom:6px;cursor:pointer">¿Olvidaste tu contraseña?</button>
+<div class="row2"><button class="btn primary" id="loginBtn" onclick="doLogin()">Entrar</button><button class="btn" onclick="doRegister()">Crear cuenta</button></div></div></div>
+
+<header class="top"><div class="top-in">
+<h1>Secadoras de cacao</h1>
+<button id="btnMenu" onclick="toggleMenu(event)" aria-label="Menú" aria-expanded="false"></button>
+<div class="userbar"><span id="uemail"></span><span class="roletag" id="roleTag"></span><span class="st" id="sst"></span><select id="spaceSel" onchange="switchSpace(this.value)" aria-label="Espacio de datos" hidden></select></div>
+<div id="menuPanel" hidden><button id="btnShare" onclick="openShare()" hidden>Compartir</button><button id="btnUsers" onclick="openUsers()" hidden>Usuarios</button><button id="btnVer" onclick="doVerify()" hidden>Verificar correo</button><button onclick="refreshAccess()">Actualizar accesos</button><button onclick="openAbout()">Acerca de</button><button onclick="doLogout()">Cerrar sesión</button></div>
+</div></header>
+<div id="spaceBanner" hidden></div>
+<main>
+<div id="skel"><div class="sk b"></div><div class="skd"><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i></div><div class="sk"></div><div class="sk"></div></div>
+<section id="t-sec">
+<div class="datebar"><button onclick="shiftDay(-1)" aria-label="Día anterior">◀</button><input type="date" id="selDate" onchange="pickDate(this.value)"><button onclick="shiftDay(1)" aria-label="Día siguiente">▶</button><button onclick="goToday()">Hoy</button></div>
+<div class="daysum" id="daySum"></div>
+<div class="floor" id="floor"></div>
+<p class="mut" style="margin-top:10px">Toca una secadora para ingresar cacao por secar, anotar temperaturas y registrar los sacos secos. Rojo = libre, ámbar = secando, verde = seco. El anillo verde compara los sacos secos que salieron cada día.</p>
+</section>
+
+<section id="t-cal" hidden>
+<div class="card">
+<div class="calhead"><button onclick="shiftMonth(-1)" aria-label="Mes anterior">◀</button><h2 id="calTitle"></h2><button onclick="shiftMonth(1)" aria-label="Mes siguiente">▶</button></div>
+<div class="calgrid" id="calGrid"></div>
+<p class="mut" style="margin:10px 0 0"><span style="color:var(--leaf);font-weight:600">Verde:</span> cacao que salió de las secadoras. <span style="color:var(--amber);font-weight:600">Ámbar:</span> cacao despachado.</p>
+</div>
+<div class="stats" id="calStats"></div>
+</section>
+
+<section id="t-res" hidden>
+<div class="stats" id="resStats"></div>
+<div class="card" id="prodCard"><details id="prodBox"><summary class="hs ps"><span class="pt">Producción</span><span id="prodSum" class="psum"></span><span class="phint">Despliega para ver los gráficos</span></summary><div class="seg"><button id="pmW" class="on" onclick="setProd('w')">Semanas</button><button id="pmM" onclick="setProd('m')">Meses</button></div><div id="prodChart"></div></details></div>
+<div class="card" id="procCard"><details id="procBox"><summary class="hs ps"><span class="pt">En las secadoras ahora</span><span id="procSum" class="psum"></span><span class="phint">Despliega para ver más detalles</span></summary><div id="resProc"></div></details></div>
+<div class="card"><h2>En almacenamiento</h2><div id="resLotes"></div>
+<div class="ma" style="justify-content:flex-start"><button class="btn leaf" onclick="openDisp()">Despachar cacao</button></div>
+<details id="closedBox" style="margin-top:10px"><summary>Lotes ya despachados por completo</summary><div id="resClosed"></div></details></div>
+<div class="card"><h2>Despachos</h2><div id="resDesp"></div></div>
+<div class="card" id="histCard"><details id="histBox"><summary class="hs">Historial de cargas</summary>
+<div class="hf"><select id="hfDry" aria-label="Filtrar por secadora" onchange="setHist('d',this.value)"></select><select id="hfMes" aria-label="Filtrar por mes" onchange="setHist('m',this.value)"></select></div>
+<div id="resCiclos"></div>
+<details style="margin-top:10px"><summary>Descargar datos (Excel / CSV)</summary>
+<div class="ma" style="justify-content:flex-start"><button class="btn sm" onclick="exportCiclos()">Resumen de cargas</button><button class="btn sm" onclick="exportEventos()">Temperaturas, volteos y calificaciones</button><button class="btn sm" onclick="exportSacos()">Sacos secos</button></div>
+<div class="mut">Se descargan con el filtro de secadora y mes que tengas elegido.</div></details></details></div>
+<div class="card" id="actCard"><h2>Actividad reciente</h2>
+<div class="hf"><select id="actUser" aria-label="Filtrar por usuario" onchange="setActUser(this.value)"></select></div>
+<div id="resAct"></div>
+<div class="ma" style="justify-content:flex-start"><button class="btn sm" onclick="exportAct()">Descargar actividad (Excel / CSV)</button></div></div>
+<div class="cols">
+<div class="card"><h2>Por procedencia</h2><div id="resOrig"></div></div>
+<div class="card"><h2>Por secadora</h2><div id="resDry"></div></div>
+<div class="card"><h2>Por tipo de cacao</h2><div id="resTipo"></div></div>
+</div>
+</section>
+</main>
+
+<!-- Modal secadora -->
+<div id="dryerM" class="modal"><div class="sheet">
+<h2 id="dmT"></h2><div class="sub" id="dmSub"></div>
+<div id="blkStatus" hidden></div>
+
+<div id="blkStart" hidden>
+<div class="sech">Ingresar cacao por secar</div>
+<div class="fg">
+<div class="field full"><label for="sd">Fecha y hora de ingreso</label><input type="datetime-local" id="sd"></div>
+<div class="field full"><label for="st">Tipo de cacao</label><div class="chips" id="tipoChips"></div><input id="st" placeholder="Elige uno arriba o escribe otro" autocomplete="off" oninput="syncChips('st')"></div>
+<div class="field full"><label for="so">Procedencia</label><div class="chips" id="origChips"></div><input id="so" placeholder="Elige una arriba o escribe finca, zona o productor" autocomplete="off" oninput="syncChips('so')"></div>
+<div class="field"><label for="sp">Productor <small>(opcional)</small></label><input id="sp" autocomplete="off"></div>
+<div class="field"><label for="sf">Finca <small>(opcional)</small></label><input id="sf" autocomplete="off"></div>
+<div class="field"><label for="sq">Cantidad por secar</label><input id="sq" inputmode="decimal" placeholder="0"></div>
+<div class="field"><label for="su">Unidad</label><select id="su"><option value="kg">Kilogramos</option><option value="qq">Quintales</option><option value="t">Toneladas</option></select></div>
+</div>
+<div class="mut" style="margin-top:6px">1 quintal = 45,36 kg</div>
+<div class="err" id="sErr"></div>
+<div class="ma"><button class="btn primary" onclick="startCiclo()">Iniciar secado</button></div>
+<div class="mut">Los sacos secos se podrán registrar cuando marques esta carga como seca.</div>
+</div>
+
+<div id="blkDrying" hidden>
+<div class="sech">Temperatura</div>
+<div class="fg">
+<div class="field"><label for="tt">Temperatura (°C)</label><input id="tt" inputmode="decimal" placeholder="Ej. 62,5" autocomplete="off" onkeydown="if(event.key==='Enter')addTemp()"></div>
+<div class="field"><label>&nbsp;</label><button class="btn primary" onclick="addTemp()">Agregar temperatura</button></div>
+</div>
+<div class="mut" style="margin-top:4px">Se guarda con la hora del teléfono. Ahora: <b id="nowClock"></b></div>
+<div class="sech">Volteo</div>
+<div class="fg">
+<div class="field"><label for="tv">Tiempo de volteo (min)</label><input id="tv" inputmode="decimal" placeholder="Ej. 15" autocomplete="off" onkeydown="if(event.key==='Enter')addVolteo()"></div>
+<div class="field"><label>&nbsp;</label><button class="btn primary" onclick="addVolteo()">Agregar volteo</button></div>
+</div>
+<div class="mut" style="margin-top:4px">Se guarda con la hora del teléfono. Déjalo vacío para anotar solo la hora del volteo.</div>
+<div class="sech">Calificación del cacao</div>
+<div class="rdisp"><span id="rdisp">—</span></div><div class="rate" id="rate"></div>
+<div class="field" style="margin-top:8px"><input id="tn" placeholder="Observación (opcional)" autocomplete="off"></div>
+<div class="ma" style="justify-content:flex-start"><button class="btn primary" onclick="addCal()">Agregar calificación</button></div>
+<div class="err" id="eErr"></div>
+<div class="mut" id="airHint"></div><div class="ma"><button class="btn red" id="btnDelCiclo" onclick="delCiclo()">Eliminar esta carga</button><button class="btn" id="btnAir" onclick="startAire()">Iniciar fase de aire</button><button class="btn" id="btnAirX" onclick="cancelAire()" hidden>Cancelar fase de aire</button><button class="btn leaf" id="btnDry" onclick="markDry()">Marcar como seco</button></div>
+</div>
+
+<div id="evBox" hidden><div class="sech">Temperaturas, volteos y calificaciones</div><div id="evList"></div></div>
+
+<div id="blkBag" hidden>
+<div class="sech" id="dmFormT">Registrar sacos secos que salieron</div>
+<div class="fg">
+<div class="field"><label for="fd">Fecha</label><input type="date" id="fd"></div>
+<div class="field"><label for="fs">Sacos secos</label><input type="number" id="fs" min="1" step="1" inputmode="numeric" oninput="calcPrev()"></div>
+<div class="field full"><label>Peso de los sacos</label><div class="chips" id="fmChips"><button type="button" class="chip-b on" data-m="std" onclick="setMode('std')">69,10 kg por saco</button><button type="button" class="chip-b" data-m="saco" onclick="setMode('saco')">Otro peso por saco</button><button type="button" class="chip-b" data-m="bas" onclick="setMode('bas')">Peso de báscula</button></div></div>
+<div class="field full" id="fwW" hidden><label for="fw">Peso de cada saco (kg)</label><input id="fw" inputmode="decimal" placeholder="Ej. 65" autocomplete="off" oninput="calcPrev()"></div>
+<div class="field full" id="ftW" hidden><label for="ftot">Peso total de la báscula (kg)</label><input id="ftot" inputmode="decimal" placeholder="Ej. 1385,5" autocomplete="off" oninput="calcPrev()"></div>
+<div class="field full"><div class="prev" id="fprev"></div></div>
+<div class="field full" id="foW" hidden><label for="fo">Procedencia del cacao</label><div class="chips" id="foChips"></div><input id="fo" placeholder="Elige una arriba o escribe otra" autocomplete="off" oninput="syncChips('fo')"></div>
+<div class="field full"><label for="fl">Destinatario o lote</label><select id="fl" onchange="onLote()"></select>
+<input id="fn" placeholder="Nombre del nuevo destinatario o lote (ej. Exportación lote 50)" style="display:none;margin-top:8px"></div>
+</div>
+<div id="fHint" class="mut" style="margin-top:6px"></div>
+<div class="err" id="fErr"></div>
+<div class="ma"><button class="btn" id="fCancel" onclick="cancelEdit()" hidden>Cancelar edición</button><button class="btn primary" id="fSave" onclick="saveEnt()">Guardar</button></div>
+</div>
+
+<div class="sech" id="dmListT"></div><div id="dmList"></div>
+
+<div id="blkDone" hidden><div class="ma" style="justify-content:flex-start"><button class="btn" id="btnReopen" onclick="reopenCiclo()">Volver a secando</button><button class="btn leaf" onclick="finishCiclo()">Finalizar descarga y liberar secadora</button></div></div>
+
+<div id="pastBox" hidden><div class="sech">Cargas anteriores de esta secadora</div><div id="pastList"></div></div>
+
+<div class="ma"><button class="btn" onclick="closeM('dryerM')">Cerrar</button></div>
+</div></div>
+
+
+<!-- Modal día -->
+<div id="dayM" class="modal"><div class="sheet">
+<h2 id="dayT"></h2><div id="dayB"></div>
+<div class="ma"><button class="btn" onclick="closeM('dayM')">Cerrar</button><button class="btn primary" id="dayOpen">Abrir en secadoras</button></div>
+</div></div>
+
+<!-- Modal despacho -->
+<div id="dispM" class="modal"><div class="sheet">
+<h2 id="dpT">Despachar cacao</h2><div class="sub">Lo despachado se descuenta del lote en almacenamiento.</div>
+<div class="fg">
+<div class="field"><label for="dd">Fecha</label><input type="date" id="dd"></div>
+<div class="field"><label for="dl">Destinatario o lote</label><select id="dl" onchange="onDispLote()"></select></div>
+<div class="field full"><div class="prev" id="dAvail"></div></div>
+<div class="field"><label for="dq">Cantidad</label><input type="number" id="dq" min="0" step="any" inputmode="decimal" oninput="calcDisp()"></div>
+<div class="field"><label for="du">Unidad</label><select id="du" onchange="calcDisp()"><option value="t">Toneladas</option><option value="kg">Kilogramos</option><option value="s">Sacos</option></select></div>
+<div class="field full"><div class="prev" id="dPrev" style="background:#f3e8d8;color:#6b3f0d"></div></div>
+<div class="field full"><label for="dn">Observación (a quién, placa, guía)</label><input id="dn" placeholder="Opcional"></div>
+</div>
+<div class="err" id="dErr"></div>
+<div class="ma"><button class="btn" onclick="closeM('dispM')">Cancelar</button><button class="btn" onclick="fillAll()">Todo el lote</button><button class="btn leaf" id="dSave" onclick="saveDisp()">Despachar</button></div>
+</div></div>
+
+<!-- Modal detalle de una carga -->
+<div id="cycM" class="modal"><div class="sheet">
+<h2 id="cyT"></h2><div id="cyB"></div>
+<div class="ma"><button class="btn" onclick="closeM('cycM')">Cerrar</button></div>
+</div></div>
+
+<div id="fichaM" class="modal"><div class="sheet"><div id="fiB"></div></div></div>
+<div id="printArea" aria-hidden="true"></div>
+<div id="metaM" class="modal"><div class="sheet"><h2>Datos del lote</h2><div class="sub" id="mtSub"></div>
+<div class="fg">
+<div class="field full"><label for="mtB">Bodega</label><input id="mtB" placeholder="Ej. Bodega 01" autocomplete="off"></div>
+<div class="field"><label for="mtZ">Zona</label><input id="mtZ" placeholder="Ej. Z-03" autocomplete="off"></div>
+<div class="field"><label for="mtR">Rack / Posición</label><input id="mtR" placeholder="Ej. R02 / N3" autocomplete="off"></div>
+<div class="field"><label for="mtH">Humedad (%)</label><input id="mtH" inputmode="decimal" placeholder="Ej. 7,1" autocomplete="off"></div>
+<div class="field"><label for="mtP">Lote anterior</label><input id="mtP" placeholder="Ej. MB-2026-00118" autocomplete="off"></div>
+</div><div class="err" id="mtErr"></div>
+<div class="ma"><button class="btn primary" onclick="saveMeta()">Guardar</button><button class="btn" onclick="closeM('metaM')">Cancelar</button></div>
+</div></div>
+<div id="shareM" class="modal"><div class="sheet"><h2 id="shT">Compartir</h2>
+<div class="sub">Da acceso a otras personas. Deben crear su cuenta con ese mismo correo y verificarlo. El permiso vale para todas las apps que usen este espacio.</div>
+<div class="fg"><div class="field full"><label for="shEmail">Correo de la persona</label><input id="shEmail" type="email" inputmode="email" autocomplete="off" placeholder="nombre@correo.com"></div>
+<div class="field"><label for="shRole">Permiso</label><select id="shRole"><option value="lector">Solo lectura</option><option value="editor">Editor</option></select></div>
+<div class="field"><label>&nbsp;</label><button class="btn primary" onclick="addMember()">Agregar</button></div></div>
+<div id="shErr" style="color:#b91c1c;font-weight:600;font-size:13px;min-height:18px;margin-top:6px"></div>
+<div style="margin:10px 0 4px;font-weight:700">Personas con acceso</div><div id="shList"></div>
+<div class="ma"><button class="btn" onclick="closeShare()">Cerrar</button></div></div></div>
+
+<div id="usersM" class="modal"><div class="sheet"><h2>Usuarios</h2>
+<div class="sub">Personas que han iniciado sesión en la app. Toca “Ver datos” para ver y editar lo que ingresó cada una. Aparecen después de su primer ingreso con la versión actual.</div>
+<div id="usList"></div>
+<details style="margin-top:12px"><summary style="font-weight:700;cursor:pointer;padding:6px 0">¿No aparece alguien? Agrégalo con su UID</summary>
+<div class="shmut" style="margin:4px 0 8px">Para quien aún no ha abierto la versión nueva. Copia su UID y su correo desde Firebase → Authentication → Users. Sus datos anteriores se conservan y aparecerán al instante.</div>
+<div class="fg"><div class="field full"><label for="usUid">UID del usuario</label><input id="usUid" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Pega aquí el UID"></div>
+<div class="field"><label for="usEmail">Correo</label><input id="usEmail" type="email" autocomplete="off" placeholder="correo@dominio.com"></div>
+<div class="field"><label>&nbsp;</label><button class="btn primary" onclick="addUserManual()">Agregar</button></div></div>
+<div id="usErr" style="color:#b91c1c;font-weight:600;font-size:13px;min-height:18px;margin-top:6px"></div></details>
+<div class="ma"><button class="btn" onclick="closeM('usersM')">Cerrar</button></div></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+/* ====== Firebase (mismo proyecto que Control de Jornada) ====== */
+const firebaseConfig={
+  apiKey:"AIzaSyAeEnTAgGIWuvIjc_g-ZzeuvKF3uyPiNjE",
+  authDomain:"horario-a5b9a.firebaseapp.com",
+  projectId:"horario-a5b9a",
+  storageBucket:"horario-a5b9a.firebasestorage.app",
+  messagingSenderId:"418662389391",
+  appId:"1:418662389391:web:f24ceb003956cc91c402fa",
+  measurementId:"G-FN2WYH5MG8"
+};
+/* ============================================================== */
+const SACO=69.10;
+const PLANTA_NOMBRE='MEGABLESSING';
+/* Dirección web pública de la app (la que abre el QR). Si la dejas vacía, la app la pide al imprimir. Ej.: 'https://midominio.com/secadoras/' */
+const APP_URL='';
+const PLANTA_LEMA='Cacao que genera futuro';
+const PLANTA_SUB='Planta de Secado - El Carmen, Manabí, Ecuador';
+const LOTE_PREFIJO='MB';
+const LAYOUT=[[1,2],[3,4,5],[6,7,8],[9,10,11],[12,13]];
+const SMALL=[3];
+/* Nombre visible de cada secadora según su posición en el plano (la pequeña es la de orgánico) */
+const NOMBRES={1:'2',2:'1',3:'orgánico',4:'4',5:'3',6:'7',7:'6',8:'5',9:'10',10:'9',11:'8',12:'12',13:'11'};
+const dlabel=n=>(n=Number(n))===3?'Secadora de orgánico':'Secadora '+NOMBRES[n];
+const dshort=n=>(n=Number(n))===3?'Org':NOMBRES[n];
+const dord=n=>(n=Number(n))===3?99:Number(NOMBRES[n]);
+const $=id=>document.getElementById(id);
+const r2=x=>Math.round((x+Number.EPSILON)*100)/100;
+const nf=new Intl.NumberFormat('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fk=kg=>nf.format(r2(kg))+' kg';
+const ft=kg=>nf.format(r2(kg/1000))+' t';
+const fc=kg=>kg>=1000?(kg/1000).toLocaleString('es-EC',{maximumFractionDigits:1})+' t':Math.round(kg)+' kg';
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+const fdate=s=>cap(parse(s).toLocaleDateString('es-EC',{weekday:'long',day:'numeric',month:'long',year:'numeric'}));
+const fshort=s=>parse(s).toLocaleDateString('es-EC',{day:'2-digit',month:'short',year:'numeric'});
+
+let db={lotes:[],entradas:[],despachos:[],ciclos:[],eventos:[],log:[]},LI={},uid=null,fdb=null,fauth=null,unsubs=[],ready={};
+let tab='sec',selDate=iso(new Date()),calMonth=selDate.slice(0,7);
+let curDryer=null,editEnt=null,formLote='',editDisp=null;
+
+/* ---------- Firestore ---------- */
+/* ====== Espacios compartidos y permisos ====== */
+let spaceUid=null,spaceRole='owner',spaces=[],isAdm=false,myEmail='',shareUnsub=null;
+function col(n){return fdb.collection('users').doc(spaceUid||uid).collection(n)}
+const ROLE_TXT={owner:'Administrador de este espacio',admin:'Administrador general',editor:'Editor',lector:'Solo lectura'};
+const canEdit=()=>spaceRole!=='lector';
+const canShare=()=>spaceRole==='owner'||spaceRole==='admin';
+function clearDB(){db={lotes:[],entradas:[],despachos:[],ciclos:[],eventos:[],log:[]}}
+async function loadSpaces(){
+  const u=fauth.currentUser;
+  spaces=[{uid:uid,label:'Mi espacio',role:'owner',email:myEmail}];isAdm=false;
+  try{const a=await fdb.collection('admins').doc(uid).get();isAdm=a.exists}catch(e){}
+  if(u&&u.emailVerified){
+    try{const sn=await fdb.collection('acceso').doc(myEmail).collection('concesiones').get();
+      sn.docs.forEach(d=>{const x=d.data();if(d.id!==uid)spaces.push({uid:d.id,label:'Datos de '+(x.ownerEmail||d.id),role:x.role==='editor'?'editor':'lector',email:x.ownerEmail||''})})
+    }catch(e){console.error(e)}
+  }
+  if(isAdm){
+    try{const ps=await fdb.collection('perfiles').get();
+      ps.docs.forEach(d=>{if(d.id!==uid&&!spaces.some(s=>s.uid===d.id))spaces.push({uid:d.id,label:'Datos de '+(d.data().email||d.id),role:'admin',email:d.data().email||''})})
+    }catch(e){console.error(e)}
+    spaces.forEach(s=>{if(s.uid!==uid)s.role='admin'})
+  }
+}
+function pickSpace(){const saved=localStorage.getItem('espacio_'+uid),w=PEND_SP&&spaces.find(x=>x.uid===PEND_SP);PEND_SP=null;setSpace((w||spaces.find(x=>x.uid===saved)||spaces[0]).uid)}
+function setSpace(id){
+  const s=spaces.find(x=>x.uid===id)||spaces[0];
+  stopSync();clearDB();spaceUid=s.uid;spaceRole=s.role;
+  try{localStorage.setItem('espacio_'+uid,spaceUid)}catch(e){}
+  renderAccessUI();startSync();render()
+}
+function switchSpace(id){setSpace(id)}
+function renderAccessUI(){
+  const sel=$('spaceSel'),u=fauth.currentUser;
+  sel.hidden=spaces.length<2;
+  sel.innerHTML=spaces.map(s=>`<option value="${esc(s.uid)}">${esc(s.label)}</option>`).join('');sel.value=spaceUid;
+  $('roleTag').textContent=(spaceRole==='owner'&&spaces.length<2)?'':ROLE_TXT[spaceRole];
+  $('btnShare').hidden=!canShare();$('btnUsers').hidden=!isAdm;
+  const bn=$('spaceBanner'),cur=spaces.find(s=>s.uid===spaceUid)||{};
+  if(spaceUid&&spaceUid!==uid){bn.hidden=false;bn.innerHTML='<span class="bt"><small>Estás viendo los datos de</small><b>'+esc(cur.email||cur.label)+'</b><em>'+esc(ROLE_TXT[spaceRole])+'</em></span><button onclick="setSpace(\''+esc(uid)+'\')">Volver a mi espacio</button>'}else{bn.hidden=true}
+  $('btnVer').hidden=!u||u.emailVerified;
+  document.body.classList.toggle('ro',!canEdit())
+}
+const IC={menu:'M4 7h16M4 12h16M4 17h16',grid:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',cal:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',chart:'M5 20V10M12 20V4M19 20v-7',l:'M15 5l-7 7 7 7',r:'M9 5l7 7-7 7',share:'M12 4v11M8 8l4-4 4 4M5 14v6h14v-6',users:'M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M17 8a3 3 0 010 6M21 20c0-2.5-1.5-4.5-4-5.5',mail:'M3 6h18v12H3zM3 7l9 7 9-7',refresh:'M20 11a8 8 0 10-2.3 5.7M20 4v7h-7',info:'M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v6M12 7.5v.01',out:'M10 4H5v16h5M15 8l4 4-4 4M19 12H9',box:'M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8'};
+function ic(n,solo){return '<svg class="ic'+(solo?' n':'')+'" viewBox="0 0 24 24" aria-hidden="true"><path d="'+IC[n]+'"/></svg>'}
+function EMP(i,t,h){return '<div class="empty">'+ic(i,1)+'<b>'+t+'</b><span>'+h+'</span></div>'}
+function decorate(){const P=(sel,n)=>{const b=document.querySelector(sel);if(b)b.insertAdjacentHTML('afterbegin',ic(n))},S=(sel,n)=>{const b=document.querySelector(sel);if(b)b.innerHTML=ic(n,1)};
+S('#btnMenu','menu');P('#tb-sec','grid');P('#tb-cal','cal');P('#tb-res','chart');S('[onclick="shiftDay(-1)"]','l');S('[onclick="shiftDay(1)"]','r');S('[onclick="shiftMonth(-1)"]','l');S('[onclick="shiftMonth(1)"]','r');
+P('#btnShare','share');P('#btnUsers','users');P('#btnVer','mail');P('[onclick="refreshAccess()"]','refresh');P('[onclick="openAbout()"]','info');P('[onclick="doLogout()"]','out')}
+let THEME='auto';try{THEME=localStorage.getItem('theme')||'auto'}catch(e){}
+const mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+function applyTheme(){document.documentElement.dataset.t=THEME==='auto'?(mq&&mq.matches?'dark':'light'):THEME}
+if(mq&&mq.addEventListener)mq.addEventListener('change',applyTheme);
+function cycleTheme(b){THEME={auto:'dark',dark:'light',light:'auto'}[THEME];try{localStorage.setItem('theme',THEME)}catch(e){}applyTheme();b.textContent='Tema: '+{auto:'automático',dark:'oscuro',light:'claro'}[THEME]}
+window.addEventListener('offline',()=>toast('Sin conexión: tus cambios se guardarán al reconectar',true));
+window.addEventListener('online',()=>{toast('Conexión restablecida, sincronizando…');try{fdb.waitForPendingWrites().then(()=>toast('Datos sincronizados'))}catch(e){}});
+function closeMenu(){$('menuPanel').hidden=true;$('btnMenu').setAttribute('aria-expanded','false')}
+function toggleMenu(e){e.stopPropagation();const p=$('menuPanel'),o=p.hidden;p.hidden=!o;$('btnMenu').setAttribute('aria-expanded',String(o))}
+document.addEventListener('click',e=>{const p=$('menuPanel');if(p&&!p.hidden&&!p.contains(e.target))closeMenu()});
+document.getElementById('menuPanel').addEventListener('click',e=>{if(e.target.closest('button'))closeMenu()});
+let lastY=0;addEventListener('scroll',()=>{const y=Math.max(0,scrollY);if(Math.abs(y-lastY)<8)return;const n=document.querySelector('nav.tabs');if(n)n.classList.toggle('hide',y>lastY&&y>80);lastY=y},{passive:true});
+const APP_VER='1.9.1';
+let updShown=false;
+async function checkUpdate(){if(updShown||!navigator.onLine)return;try{const r=await fetch(location.pathname+location.search,{cache:'no-store'});if(!r.ok)return;const m=(await r.text()).match(/APP_VER='([^']+)'/);if(m&&m[1]!==APP_VER){updShown=true;const ae=document.activeElement;if(!document.querySelector('.modal.show')&&!(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName))){location.reload();return}const b=document.createElement('div');b.id='updBar';b.innerHTML='<span>Hay una versión nueva de la app</span><button class="btn primary" onclick="location.reload()">Actualizar</button>';document.body.appendChild(b)}}catch(e){}}
+setInterval(checkUpdate,10*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});setTimeout(checkUpdate,8000);let loadT0=0,loadT=null;
+function showLoadMsg(){const m=$('loadMsg');if(m.classList.contains('show')&&!m.classList.contains('out'))return;clearTimeout(loadT);loadT0=Date.now();m.classList.remove('out');m.classList.add('show');loadT=setTimeout(()=>hideLoadMsg(true),5000)}
+loadT0=Date.now();loadT=setTimeout(()=>hideLoadMsg(true),5000);
+function hideLoadMsg(force){const m=$('loadMsg');if(!m.classList.contains('show')||m.classList.contains('out'))return;clearTimeout(loadT);const w=force?0:Math.max(0,2500-(Date.now()-loadT0));loadT=setTimeout(()=>{m.classList.add('out');setTimeout(()=>m.classList.remove('show','out'),250)},w)}
+let toastT=null;
+function toast(msg,err){const t=$('toast');t.textContent=msg;t.classList.toggle('err',!!err);t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),4500)}
+window.alert=m=>{m=String(m);toast(m,/no se pudo|permiso|error|incorrect|no válido/i.test(m))};
+function askConfirm(msg,ok,cb){$('dlgBody').textContent=msg;const b=$('dlgBtns');b.innerHTML='';const c=document.createElement('button');c.className='btn';c.textContent='Cancelar';c.onclick=()=>closeM('dlg');const o=document.createElement('button');o.className='btn primary';o.textContent=ok||'Aceptar';o.onclick=()=>{closeM('dlg');cb()};b.append(c,o);openM('dlg')}
+function openAbout(){$('dlgBody').innerHTML='<b style="font-family:Barlow Condensed,sans-serif;font-size:24px">Secadoras de cacao</b><br><small>Versión '+APP_VER+'</small><br><br>Aplicación desarrollada por<br><b>Junior Velez</b><br>Telf: 0998611246';const b=$('dlgBtns');b.innerHTML='';const e=document.createElement('button');e.className='btn';e.textContent='Descargar copia de datos';e.onclick=exportBackup;const c=document.createElement('button');c.className='btn primary';c.textContent='Cerrar';c.onclick=()=>closeM('dlg');const th=document.createElement('button');th.className='btn';th.textContent='Tema: '+{auto:'automático',dark:'oscuro',light:'claro'}[THEME];th.onclick=()=>cycleTheme(th);const fb=document.createElement('button');fb.className='btn';fb.textContent=FULL?'Mostrar solo los últimos 12 meses':'Cargar todo el historial';fb.onclick=()=>{FULL=!FULL;closeM('dlg');startSync();toast(FULL?'Cargando todo el historial…':'Mostrando los últimos 12 meses')};b.append(th,fb,e,c);openM('dlg')}
+function exportBackup(){const blob=new Blob([JSON.stringify(db,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='copia-secadoras-'+iso(new Date())+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast('Copia descargada')}
+function togglePw(){const i=$('apw'),h=i.type==='password';i.type=h?'text':'password';$('eyeBtn').textContent=h?'Ocultar':'Ver'}
+function busy(on){const b=$('loginBtn');if(b){b.disabled=on;b.textContent=on?'Entrando…':'Entrar'}}
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+async function onUser(u){
+  uid=u.uid;myEmail=(u.email||'').toLowerCase();
+  showLoadMsg();busy(false);
+  $('uemail').textContent=u.email;$('auth').classList.remove('show');$('apw').value='';
+  try{await fdb.collection('perfiles').doc(uid).set({email:myEmail,ult:Date.now()},{merge:true})}catch(e){console.error(e)}
+  await loadSpaces();pickSpace()
+}
+function doVerify(){
+  const u=fauth.currentUser;if(!u)return;fauth.languageCode='es';
+  u.sendEmailVerification().then(()=>alert('Te enviamos un enlace de verificación a '+u.email+'. Ábrelo y luego toca “Actualizar accesos”.')).catch(e=>alert('No se pudo enviar el correo: '+(e.code||e.message)))
+}
+async function refreshAccess(){
+  const u=fauth.currentUser;if(!u)return;
+  try{await u.reload();await u.getIdToken(true)}catch(e){}
+  const keep=spaceUid;await loadSpaces();setSpace(spaces.some(s=>s.uid===keep)?keep:uid)
+}
+/* ---- Compartir ---- */
+function accDoc(email){return fdb.collection('acceso').doc(email).collection('concesiones').doc(spaceUid)}
+function openShare(){
+  if(!canShare())return;
+  const sp=spaces.find(s=>s.uid===spaceUid)||{};
+  $('shT').textContent='Compartir '+(spaceUid===uid?'mi espacio':'los datos de '+(sp.email||''));
+  $('shEmail').value='';$('shErr').textContent='';
+  if(shareUnsub)shareUnsub();
+  shareUnsub=col('miembros').onSnapshot(sn=>{
+    const l=sn.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.email).localeCompare(String(b.email)));
+    $('shList').innerHTML=l.length?l.map(m=>`<div class="shi"><div class="shm">${esc(m.email)}</div><select aria-label="Permiso" onchange="setMemberRole('${esc(m.id)}',this.value)"><option value="lector"${m.role==='lector'?' selected':''}>Solo lectura</option><option value="editor"${m.role==='editor'?' selected':''}>Editor</option></select><button class="btn small red" onclick="delMember('${esc(m.id)}')" aria-label="Quitar acceso">✕</button></div>`).join(''):'<div class="shmut">Todavía no compartes este espacio con nadie.</div>'
+  },e=>{$('shErr').textContent='No se pudo leer la lista: '+(e.code||e.message)});
+  openM('shareM')
+}
+function closeShare(){if(shareUnsub)shareUnsub();shareUnsub=null;closeM('shareM')}
+async function openUsers(){
+  if(!isAdm)return;
+  $('usList').innerHTML='<div class="shmut">Cargando…</div>';openM('usersM');
+  try{
+    const ps=await fdb.collection('perfiles').get();
+    window.__users=ps.docs.map(d=>({uid:d.id,email:d.data().email||'',ult:d.data().ult||0})).sort((a,b)=>String(a.email).localeCompare(String(b.email)));
+    $('usList').innerHTML=window.__users.length?window.__users.map(u=>`<div class="shi"><div class="shm"><b>${esc(u.email||u.uid)}</b>${u.uid===uid?' (tú)':''}<div class="shmut">Último acceso: ${u.ult?new Date(u.ult).toLocaleString('es-EC',{hour12:false}):'sin dato'}</div><button class="btn sm" style="margin-top:6px" onclick="setNombre('${esc(u.email)}')">Poner nombre</button></div>${u.uid===uid?'':`<button class="btn small primary" onclick="viewUser('${esc(u.uid)}')">${u.uid===spaceUid?'Viendo':'Ver datos'}</button>`}</div>`).join(''):'<div class="shmut">Todavía no hay otros usuarios.</div>'
+  }catch(e){$('usList').innerHTML='<div class="shmut">No se pudo leer la lista: '+esc(e.code||e.message)+'</div>'}
+}
+function addUserManual(){
+  const id=$('usUid').value.trim(),em=$('usEmail').value.trim().toLowerCase();$('usErr').textContent='';
+  if(!isAdm)return;
+  if(!/^[A-Za-z0-9]{20,40}$/.test(id))return $('usErr').textContent='El UID no parece válido (son 28 letras y números, sin espacios).';
+  if(!/^[^\s@'"<>]+@[^\s@'"<>]+\.[^\s@'"<>]+$/.test(em))return $('usErr').textContent='Escribe el correo de esa persona.';
+  fdb.collection('perfiles').doc(id).set({email:em,ult:0,manual:true},{merge:true}).then(()=>{
+    $('usUid').value='';$('usEmail').value='';
+    if(!spaces.some(s=>s.uid===id))spaces.push({uid:id,label:'Datos de '+em,role:'admin',email:em});
+    renderAccessUI();openUsers()
+  }).catch(e=>{$('usErr').textContent='No se pudo agregar: '+(e.code||e.message)})
+}
+function viewUser(id){
+  const u=(window.__users||[]).find(x=>x.uid===id);closeM('usersM');
+  if(!spaces.some(s=>s.uid===id)&&u)spaces.push({uid:id,label:'Datos de '+(u.email||id),role:'admin',email:u.email||''});
+  setSpace(id)
+}
+function addMember(){
+  const e=$('shEmail').value.trim().toLowerCase(),role=$('shRole').value,sp=spaces.find(s=>s.uid===spaceUid)||{};
+  $('shErr').textContent='';
+  if(!/^[^\s@'"<>\\\/]+@[^\s@'"<>\\\/]+\.[^\s@'"<>\\\/]+$/.test(e))return $('shErr').textContent='Escribe un correo válido.';
+  if(e===myEmail&&spaceUid===uid)return $('shErr').textContent='Ese es tu propio correo.';
+  const b=fdb.batch();
+  b.set(col('miembros').doc(e),{email:e,role});
+  b.set(accDoc(e),{ownerUid:spaceUid,ownerEmail:sp.email||myEmail,role,email:e});
+  b.commit().then(()=>{$('shEmail').value=''}).catch(fail)
+}
+function setMemberRole(e,role){const b=fdb.batch();b.update(col('miembros').doc(e),{role});b.update(accDoc(e),{role});b.commit().catch(fail)}
+function delMember(e){
+  if(!confirm('¿Quitar el acceso de '+e+'?'))return;
+  const b=fdb.batch();b.delete(col('miembros').doc(e));b.delete(accDoc(e));b.commit().catch(fail)
+}
+
+function fail(e){console.error(e);if(e&&e.code==='permission-denied')alert('No tienes permiso para guardar en este espacio (solo lectura o sin acceso).');else alert('No se pudo guardar en la nube: '+(e&&(e.code||e.message)||e))}
+function netStatus(){const t=$('sst');t.dataset.s=navigator.onLine?'ok':'off';t.textContent=navigator.onLine?'Sincronizado':'Sin conexión: se guardará al reconectar'}
+window.addEventListener('online',netStatus);window.addEventListener('offline',netStatus);
+function startSync(){
+  stopSync();ready={};codesTried=false;document.body.classList.add('loading');$('sst').textContent='Cargando…';
+  const names={sec_lotes:'lotes',sec_entradas:'entradas',sec_despachos:'despachos',sec_ciclos:'ciclos',sec_eventos:'eventos',sec_log:'log'};
+  Object.keys(names).forEach(c=>{
+    unsubs.push((c==='sec_log'?col(c).orderBy('ts','desc').limit(300):(c==='sec_ciclos'&&!FULL)?col(c).where('startAt','>=',Date.now()-365*864e5):(c==='sec_eventos'&&!FULL)?col(c).where('ts','>=',Date.now()-365*864e5):col(c)).onSnapshot(sn=>{
+      db[names[c]]=sn.docs.map(d=>({id:d.id,...d.data()}));
+      ready[c]=true;if(Object.keys(names).every(k=>ready[k])){netStatus();hideLoadMsg();document.body.classList.remove('loading')};render()
+    },e=>{document.body.classList.remove('loading');$('sst').dataset.s='off';$('sst').textContent='Error de sincronización';console.error(e)}))
+  })
+  NM={};unsubs.push(col('sec_nombres').onSnapshot(sn=>{NM={};sn.docs.forEach(d=>{const v=d.data();if(v&&v.email&&v.name)NM[v.email.toLowerCase()]=v.name});render()},e=>console.warn('nombres',e)))
+}
+function stopSync(){unsubs.forEach(u=>u());unsubs=[]}
+
+/* ---------- Acceso ---------- */
+function authErr(e){const m={'auth/invalid-credential':'Correo o contraseña incorrectos.','auth/wrong-password':'Contraseña incorrecta.','auth/user-not-found':'No existe una cuenta con ese correo.','auth/email-already-in-use':'Ese correo ya tiene cuenta. Usa “Entrar”.','auth/weak-password':'La contraseña debe tener al menos 6 caracteres.','auth/invalid-email':'Correo no válido.','auth/missing-email':'Escribe tu correo.','auth/too-many-requests':'Demasiados intentos. Espera unos minutos.','auth/network-request-failed':'Sin conexión a internet.','auth/unauthorized-domain':'Dominio no autorizado: agrégalo en Firebase → Authentication → Settings → Authorized domains.'};$('autherr').textContent=m[e.code]||(e.code||e.message)}
+function doLogin(){$('autherr').textContent='';busy(true);fauth.signInWithEmailAndPassword($('aem').value.trim(),$('apw').value).catch(e=>{busy(false);authErr(e)})}
+function doRegister(){$('autherr').textContent='';fauth.languageCode='es';fauth.createUserWithEmailAndPassword($('aem').value.trim(),$('apw').value).then(c=>c.user.sendEmailVerification().then(()=>alert('Te enviamos un correo para verificar tu cuenta. Solo es necesario para acceder a espacios compartidos.')).catch(()=>{})).catch(authErr)}
+function doReset(){
+  const em=$('aem').value.trim();$('autherr').textContent='';$('authok').textContent='';
+  if(!em){$('autherr').textContent='Escribe tu correo arriba y vuelve a tocar “¿Olvidaste tu contraseña?”.';return}
+  fauth.languageCode='es';
+  fauth.sendPasswordResetEmail(em).then(()=>{$('authok').textContent='Listo. Si el correo tiene cuenta, te enviamos un enlace para crear una contraseña nueva (revisa también spam).'}).catch(authErr)
+}
+function doLogout(){askConfirm('¿Cerrar sesión?','Cerrar sesión',()=>fauth.signOut())}
+function initFirebase(){
+  firebase.initializeApp(firebaseConfig);fauth=firebase.auth();fdb=firebase.firestore();
+  fdb.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+  fauth.onAuthStateChanged(u=>{
+    if(u){onUser(u)}
+    else{uid=null;spaceUid=null;stopSync();clearDB();myEmail='';spaces=[];$('uemail').textContent='';$('auth').classList.add('show');hideLoadMsg(true);document.body.classList.remove('ro','loading');render()}
+  })
+}
+
+/* ---------- Cálculos ---------- */
+function recalc(){
+  const m={};db.lotes.forEach(l=>m[l.id]={l,ing:0,desp:0,orig:{}});
+  db.entradas.forEach(e=>{const x=m[e.loteId];if(!x)return;x.ing+=e.kg;const o=e.origin||'Sin procedencia';x.orig[o]=(x.orig[o]||0)+e.kg});
+  db.despachos.forEach(d=>{const x=m[d.loteId];if(x)x.desp+=d.kg});
+  Object.values(m).forEach(x=>{x.ing=r2(x.ing);x.desp=r2(x.desp);x.stock=r2(x.ing-x.desp)});
+  LI=m;PLAN=planCodes()
+}
+const stockOf=id=>LI[id]?LI[id].stock:0;
+const lname=id=>LI[id]?LI[id].l.name:'(lote eliminado)';
+function inStock(extraId){return Object.values(LI).filter(x=>x.stock>0.005||x.l.id===extraId).sort((a,b)=>a.l.name.localeCompare(b.l.name))}
+const sum=(arr,f)=>r2(arr.reduce((a,x)=>a+f(x),0));
+
+/* ---------- Pestañas y fecha ---------- */
+function setTab(t){tab=t;['histBox','procBox','prodBox'].forEach(i=>{const h=$(i);if(h)h.open=false});['sec','cal','res'].forEach(x=>{$('t-'+x).hidden=x!==t;$('tb-'+x).classList.toggle('on',x===t)});render()}
+function pickDate(v){if(v){selDate=v;calMonth=v.slice(0,7);render()}}
+function shiftDay(n){const d=parse(selDate);d.setDate(d.getDate()+n);pickDate(iso(d))}
+function goToday(){pickDate(iso(new Date()))}
+function shiftMonth(n){const [y,m]=calMonth.split('-').map(Number);calMonth=iso(new Date(y,m-1+n,1)).slice(0,7);renderCal()}
+const openStack=[];let skipPop=0;
+function openM(id){
+  const m=$(id);if(!m)return;m.classList.add('show');document.body.classList.add('lock');
+  if(!openStack.includes(id)){openStack.push(id);try{history.pushState({sheet:id},'')}catch(e){}}
+}
+function closeM(id,fromPop){
+  const m=$(id);if(!m)return;m.classList.remove('show');
+  if(!document.querySelector('.modal.show'))document.body.classList.remove('lock');
+  const i=openStack.indexOf(id);
+  if(i>=0){openStack.splice(i,1);if(!fromPop){skipPop++;try{history.back()}catch(e){skipPop--}}}
+}
+
+function render(){
+  recalc();qrCheck();
+  if(tab==='sec')renderSec();else if(tab==='cal')renderCal();else{renderRes();renderResExtra();renderAct()}
+  if($('dryerM').classList.contains('show'))refreshDryerModal()
+}
+
+/* ---------- Ciclos de secado ---------- */
+const UQQ=45.36;
+const TIPOS_BASE=['CCN-51','Nacional (fino de aroma)'];
+const tfmt=ms=>new Date(ms).toLocaleString('es-EC',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false});
+const hfmt=ms=>new Date(ms).toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',hour12:false});
+const dur=ms=>{const m=Math.max(0,Math.round(ms/60000)),h=Math.floor(m/60);return h>=48?Math.floor(h/24)+' d '+(h%24)+' h':h+' h '+String(m%60).padStart(2,'0')+' min'};
+const isoLocal=d=>iso(d)+'T'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+const num=v=>Number(String(v).replace(',','.'));
+const fnum=v=>String(v).replace('.',',');
+function evWho(e){return '<div class="who">'+(e.by?'👤 Por <b>'+nm(e.by)+'</b>':'👤 Autor no registrado')+'</div>'}
+let NM={};const openL=new Set();let FULL=false,prodM='w';
+function nm(e){e=e||'';return esc(NM[e.toLowerCase()]||e)}
+function setNombre(email){const k=email.toLowerCase(),n=prompt('Nombre que se mostrará en lugar de '+email+' (vacío para quitarlo):',NM[k]||'');if(n===null)return;const id=encodeURIComponent(k),r=n.trim()?col('sec_nombres').doc(id).set({email:k,name:n.trim()}):col('sec_nombres').doc(id).delete();r.then(()=>{toast('Nombre guardado');openUsers()}).catch(fail)}
+function setProd(m){prodM=m;renderProd()}
+function renderProd(){
+  const wk=d=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()-((x.getDay()+6)%7));return iso(x)},now=new Date(),B={},keys=[],MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  for(let i=11;i>=0;i--){const d=new Date(now);if(prodM==='w'){d.setDate(d.getDate()-7*i);keys.push(wk(iso(d)))}else{d.setDate(1);d.setMonth(d.getMonth()-i);keys.push(iso(d).slice(0,7))}}
+  keys.forEach(k=>B[k]=0);db.entradas.forEach(e=>{const k=prodM==='w'?wk(e.date):e.date.slice(0,7);if(k in B)B[k]+=e.kg});
+  const mx=Math.max(1,...keys.map(k=>B[k]));
+  $('pmW').classList.toggle('on',prodM==='w');$('pmM').classList.toggle('on',prodM==='m');
+  $('prodChart').innerHTML='<div class="bars">'+keys.map(k=>{const v=B[k],l=prodM==='w'?k.slice(8)+'/'+k.slice(5,7):MS[+k.slice(5,7)-1];return `<div class="bc"><span class="bv">${v?nf.format(r2(v/1000)):''}</span><i style="height:${Math.max(2,v/mx*78)}%"></i><span class="bl">${l}</span></div>`}).join('')+'</div><div class="mut">Toneladas que salieron de las secadoras '+(prodM==='w'?'por semana (desde el lunes). Últimas 12 semanas.':'por mes. Últimos 12 meses.')+'</div>';
+  const tw=sum(db.entradas.filter(e=>wk(e.date)===wk(iso(now))),e=>e.kg),tm=sum(db.entradas.filter(e=>e.date.slice(0,7)===iso(now).slice(0,7)),e=>e.kg);
+  $('prodSum').innerHTML=`<span class="pc a"><b>${nf.format(r2(tw/1000))}</b> t esta semana</span><span class="pc g"><b>${nf.format(r2(tm/1000))}</b> t este mes</span>`
+}
+function evGroups(evs,fn){
+  return [['temp','Temperaturas'],['volteo','Volteos'],['cal','Calificaciones']].map(([t,T])=>{
+    const l=evs.filter(e=>e.type===t).sort((a,b)=>b.ts-a.ts);if(!l.length)return '';
+    const v=l.map(e=>e.value).filter(x=>x!=null);
+    const r=t==='temp'?'última '+fnum(l[0].value)+' °C · prom. '+fnum(r2(sum(v,x=>x)/v.length)):t==='volteo'?(v.length?fnum(sum(v,x=>x))+' min en total':'sin minutos'):'prom. '+fnum(r2(sum(v,x=>x)/v.length));
+    return `<div class="evh"><b>${T} (${l.length})</b><span>${r}</span></div>`+l.map(fn).join('')}).join('')
+}
+function toggL(d){d.open?openL.add(d.dataset.id):openL.delete(d.dataset.id)}
+const PAL=['#a31f1f','#d98a1c','#18805f','#0a84ff','#8e5ad8','#c2417a','#2b8a9e','#7a5c3a'];
+function loteDetail(x){
+  const E=db.entradas.filter(e=>e.loteId===x.l.id);if(!E.length)return '';
+  const G={};E.forEach(e=>{const k=e.cycleId||'d'+e.dryer,g=G[k]||(G[k]={k,dryer:e.dryer,cid:e.cycleId||null,s:0,kg:0,by:{}});g.s+=e.sacks;g.kg+=e.kg;if(e.by)g.by[e.by]=1});
+  const gs=Object.values(G).sort((a,b)=>dord(a.dryer)-dord(b.dryer)||a.k.localeCompare(b.k)),tot=sum(gs,g=>g.kg)||1,allT=[];
+  gs.forEach((g,i)=>g.c=PAL[i%PAL.length]);
+  const cards=gs.map(g=>{
+    const c=g.cid?db.ciclos.find(y=>y.id===g.cid):null,T=c?evsOf(c.id,'temp').map(e=>e.value).filter(v=>v!=null):[],V=c?evsOf(c.id,'volteo'):[],K=c?evsOf(c.id,'cal').map(e=>e.value):[];
+    allT.push(...T);const mn=Math.min(...T),mx=Math.max(...T),av=T.length?sum(T,v=>v)/T.length:0,vm=sum(V,e=>e.value||0);
+    const spk=T.length>1?'<span class="spk">'+T.slice(-12).map(v=>'<i style="height:'+(30+(v-mn)/((mx-mn)||1)*70)+'%"></i>').join('')+'</span>':'';
+    const by=Object.keys(g.by).map(nm).join(', ');
+    return `<div class="ld-dry" style="--c:${g.c}"><h4><span>${dlabel(g.dryer)}</span><span>${fk(g.kg)} · ${g.s} sacos · ${Math.round(g.kg/tot*100)} %</span></h4>`+
+    (c?`<div class="mut"><b>${esc(c.tipo||'Sin tipo')}</b> de ${esc(c.origin||'procedencia sin indicar')}. Ingresó ${fk(c.kgHumedo)} húmedo el ${tfmt(c.startAt)}${c.dryAt?'; secó en '+dur(c.dryAt-c.startAt):''}.</div>
+    <div class="mut">Cargada por ${c.by?'<b>'+nm(c.by)+'</b>':'autor no registrado'}${c.dryAt?' · marcada seca por '+(c.dryBy?'<b>'+nm(c.dryBy)+'</b>':'autor no registrado'):''}.</div>
+    <div class="mut">${T.length?T.length+' temperatura'+(T.length===1?'':'s')+': '+fnum(mn)+' a '+fnum(mx)+' °C (prom. '+fnum(r2(av))+')'+spk:'Sin temperaturas'} · ${V.length} volteo${V.length===1?'':'s'}${vm?' ('+fnum(vm)+' min)':''}${K.length?' · calificación prom. '+fnum(r2(sum(K,v=>v)/K.length)):''}.</div>`:'<div class="mut">Registro anterior, sin datos de la carga.</div>')+
+    (by?`<div class="mut">Salida registrada por ${by}.</div>`:'')+'</div>'}).join('');
+  const bar=gs.map(g=>`<i style="flex:${g.kg};background:${g.c}"></i>`).join(''),leg=gs.map(g=>`<span style="--c:${g.c}">${dlabel(g.dryer)} ${Math.round(g.kg/tot*100)} %</span>`).join('');
+  return `<details class="ldet" data-id="${x.l.id}" ontoggle="toggL(this)"${openL.has(x.l.id)?' open':''}><summary>Detalle por secadora · ${gs.length}</summary><div class="ld-bar">${bar}</div><div class="ld-leg">${leg}</div><div class="ld-kpi"><div><b>${gs.length}</b>secadora${gs.length===1?'':'s'}</div><div><b>${sum(gs,g=>g.s)}</b>sacos</div><div><b>${allT.length?fnum(r2(sum(allT,v=>v)/allT.length))+' °C':'—'}</b>temp. prom.</div></div>${cards}</details>`
+}
+const FAN='<svg class="fan" viewBox="0 0 60 60" aria-hidden="true"><g class="fb"><path d="M30 30C28 14 36 6 43 10C48 15 40 27 30 30z"/><path d="M30 30C28 14 36 6 43 10C48 15 40 27 30 30z" transform="rotate(90 30 30)"/><path d="M30 30C28 14 36 6 43 10C48 15 40 27 30 30z" transform="rotate(180 30 30)"/><path d="M30 30C28 14 36 6 43 10C48 15 40 27 30 30z" transform="rotate(270 30 30)"/></g><circle cx="30" cy="30" r="3.5" fill="#fff"/></svg>';
+const BLD='<span class="blades" aria-hidden="true"><i></i><i></i></span>';
+const SKS='<svg class="sack" viewBox="0 0 60 60" aria-hidden="true"><rect class="sf" x="18" y="24" width="24" height="28" rx="3"/><path class="sb" d="M20 20h20l4 6v24a4 4 0 01-4 4H20a4 4 0 01-4-4V26z"/><circle class="gr" cx="30" cy="25" r="1.6"/><circle class="gr" cx="34" cy="25" r="1.6" style="animation-delay:.12s"/><circle class="gr" cx="38" cy="25" r="1.6" style="animation-delay:.24s"/><g class="sv"><line x1="8" y1="8" x2="27" y2="20"/><path d="M27 20l7-3 3 6-8 4z"/></g></svg>';
+function whoLine(o,verb){
+  if(!o)return '';let t='';
+  if(o.by)t+=(verb||'Registrado')+' por '+nm(o.by);
+  if(o.upBy)t+=(t?' · ':'')+'editado por '+nm(o.upBy)+(o.upTs?' el '+tfmt(o.upTs):'');
+  return t?'<div class="mut">'+t+'</div>':''
+}
+function logAct(txt,dryer){try{col('sec_log').doc(nid()).set({ts:Date.now(),by:myEmail||'',txt,dryer:dryer==null?null:Number(dryer)}).catch(()=>{})}catch(e){}}
+let rateSel=null;
+function activeOf(n){return db.ciclos.filter(c=>Number(c.dryer)===Number(n)&&c.status!=='finalizada').sort((a,b)=>b.startAt-a.startAt)[0]||null}
+function evsOf(id,type){return db.eventos.filter(e=>e.cycleId===id&&(!type||e.type===type)).sort((a,b)=>a.ts-b.ts)}
+function cycEntries(id){return db.entradas.filter(e=>e.cycleId===id)}
+function setChips(boxId,inputId,vals){
+  const box=$(boxId),cur=$(inputId).value.trim().toLowerCase();
+  box.innerHTML=vals.map(v=>`<button type="button" class="chip-b${v.toLowerCase()===cur?' on':''}" data-v="${esc(v)}">${esc(v)}</button>`).join('');
+  box.onclick=e=>{const b=e.target.closest('.chip-b');if(!b)return;$(inputId).value=b.dataset.v;syncChips(inputId)}
+}
+function syncChips(inputId){
+  const box=$({st:'tipoChips',so:'origChips',fo:'foChips'}[inputId]),cur=$(inputId).value.trim().toLowerCase();
+  box.querySelectorAll('.chip-b').forEach(b=>b.classList.toggle('on',b.dataset.v.toLowerCase()===cur))
+}
+const calMaxOf=e=>e.max||10;
+const calTxt=e=>e.max===10?e.value+' de 10':String(e.value);
+function evTxt(e){
+  if(e.type==='temp')return fnum(e.value)+' °C';
+  if(e.type==='volteo')return 'Volteo'+(e.value>0?': '+fnum(e.value)+' min':'');
+  return 'Calificación '+calTxt(e)+(e.note?': '+esc(e.note):'')
+}
+function pickRate(v){rateSel=v;$('rdisp').textContent=v===null?'—':v}
+function kp(k){if(k==='C')return pickRate(null);const c=rateSel===null?'':String(rateSel);if(k==='⌫')return pickRate(c.length>1?Number(c.slice(0,-1)):null);const n=c==='0'?k:c+k;if(n.length>4)return;$('eErr').textContent='';pickRate(Number(n))}
+
+/* ---------- Secadoras ---------- */
+function renderSec(){
+  $('selDate').value=selDate;
+  const de=db.entradas.filter(e=>e.date===selDate),per={};
+  de.forEach(e=>{const p=per[e.dryer]||(per[e.dryer]={s:0,kg:0});p.s+=e.sacks;p.kg+=e.kg});
+  const mx=Math.max(1,...Object.values(per).map(p=>p.s));
+  const ts=de.reduce((a,e)=>a+e.sacks,0),tk=sum(de,e=>e.kg);
+  $('daySum').innerHTML=`<div class="dt">${esc(fdate(selDate))}</div><div class="dn"><b>${ts}</b>sacos secos</div><div class="dn"><b>${nf.format(tk)}</b>kg</div><div class="dn"><b>${nf.format(r2(tk/1000))}</b>toneladas</div>`;
+  $('floor').innerHTML=LAYOUT.map(row=>'<div class="row">'+row.map(n=>{
+    const p=per[n],pct=p?Math.round(p.s/mx*100):0,sm=SMALL.includes(n),ac=activeOf(n);
+    const sec=ac&&ac.status==='secando',word=!ac?'libre':sec?'secando':'seco',lt=sec?evsOf(ac.id,'temp').pop():null;
+    return `<button class="dry${sm?' small':''}${ac?(sec?(ac.airAt?' st-sec air':' st-sec'):' st-seco'):''}" style="--p:${pct}" onclick="openDryer(${n})" aria-label="${dlabel(n)}, ${word}${p?', salieron '+p.s+' sacos':''}"><span class="disc"><span class="hub">${ac?(sec?(ac.airAt?FAN:BLD):SKS):''}<b>${dshort(n)}</b><i>${word}</i></span></span><span class="dkg">${p?nf.format(r2(p.kg))+' kg':''}${lt?`<small>${fnum(lt.value)} °C</small>`:''}</span></button>`
+  }).join('')+'</div>').join('')
+}
+
+function openDryer(n,date,editId){
+  curDryer=n;if(date)selDate=date;
+  editEnt=editId?db.entradas.find(x=>x.id===editId)||null:null;
+  resetForm();if(editEnt)loadEdit(editEnt);
+  $('sd').value=isoLocal(new Date());$('st').value='';$('so').value='';$('sq').value='';$('su').value='kg';$('sErr').textContent='';
+  $('tt').value='';$('tv').value='';$('tn').value='';$('eErr').textContent='';pickRate(null);
+  refreshDryerModal();openM('dryerM')
+}
+function resetForm(){
+  $('fd').value=selDate;$('fs').value='';$('fo').value='';$('fn').value='';$('fErr').textContent='';$('foW').hidden=true;$('fw').value='';$('ftot').value='';
+  $('fSave').textContent='Guardar';$('fCancel').hidden=true;$('dmFormT').textContent='Registrar sacos secos que salieron';
+  setMode('std')
+}
+function loadEdit(e){
+  $('fd').value=e.date;$('fs').value=e.sacks;$('fo').value=e.origin||'';$('foW').hidden=!!e.cycleId;formLote=e.loteId;$('fn').value='';
+  $('fSave').textContent='Guardar cambios';$('fCancel').hidden=false;$('dmFormT').textContent='Editar registro';
+  const m=e.modo||(Math.abs((e.kgSaco||SACO)-SACO)<0.005?'std':'saco');$('fw').value=m==='saco'?String(e.kgSaco).replace('.',','):'';$('ftot').value=m==='bas'?String(e.kg).replace('.',','):'';setMode(m)
+}
+function cancelEdit(){editEnt=null;resetForm();refreshDryerModal()}
+let bagMode='std';
+function bagCalc(){
+  const s=Math.round(num($('fs').value))||0;let kg=0,kgS=SACO;
+  if(bagMode==='std')kg=r2(s*SACO);
+  else if(bagMode==='saco'){kgS=num($('fw').value)||0;kg=r2(s*kgS)}
+  else{kg=r2(num($('ftot').value)||0);kgS=s>0?r2(kg/s):0}
+  return {s,kg,kgS}
+}
+function setMode(m){
+  bagMode=m;
+  document.querySelectorAll('#fmChips .chip-b').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  $('fwW').hidden=m!=='saco';$('ftW').hidden=m!=='bas';calcPrev()
+}
+function calcPrev(){
+  $('fErr').textContent='';const c=bagCalc(),t=fk(c.kg)+' = '+ft(c.kg);
+  $('fprev').textContent=bagMode==='std'?'Total: '+t+' (69,10 kg por saco)':bagMode==='saco'?c.s+' sacos × '+fnum(c.kgS)+' kg = '+t:'Peso de báscula: '+t+(c.s>0&&c.kg>0?' (≈ '+fnum(c.kgS)+' kg por saco)':'')
+}
+function modoTxt(e){return e.modo==='bas'?' · peso de báscula':(e.modo==='saco'||(e.kgSaco&&Math.abs(e.kgSaco-SACO)>0.005))?' · '+fnum(e.kgSaco)+' kg por saco':''}
+function onLote(){formLote=$('fl').value;$('fn').style.display=formLote==='__new'?'block':'none'}
+function fillLote(){
+  const s=$('fl'),list=inStock(editEnt&&editEnt.loteId);
+  let h='';
+  if(list.length)h='<option value="">Selecciona…</option>'+list.map(x=>`<option value="${x.l.id}">${esc(x.l.name)} (${ft(x.stock)} almacenadas)</option>`).join('')+'<option value="__new">➕ Crear nuevo destinatario o lote</option>';
+  else h='<option value="__new">➕ Crear nuevo destinatario o lote</option>';
+  s.innerHTML=h;
+  const ok=[...s.options].some(o=>o.value===formLote);
+  s.value=ok?formLote:(list.length?'':'__new');
+  $('fHint').textContent=list.length?'Solo aparecen los lotes que todavía tienen cacao almacenado.':'No hay cacao almacenado: crea un destinatario o lote nuevo.';
+  onLote()
+}
+function cycleSummary(ac){
+  const ent=cycEntries(ac.id),kgS=sum(ent,e=>e.kg),sacos=ent.reduce((a,e)=>a+e.sacks,0),sec=ac.status==='secando',vt=evsOf(ac.id,'volteo');
+  return `<div class="cyc"><span class="chip ${sec?'a':'g'}">${sec?(ac.airAt?'Fase de aire':'Secando'):'Seco: registrando sacos'}</span><div><b>${esc(ac.tipo||'Sin tipo')}</b> de ${esc(ac.origin||'procedencia sin indicar')}</div><div>${fk(ac.kgHumedo)} por secar (${ft(ac.kgHumedo)}) ${!ac.kgEdited?'<button class="btn sm" onclick="editPeso()">Corregir peso</button>':''}</div>${ac.kgEdited?`<div class="mut">Peso corregido una vez: antes decía ${fk(ac.kgOrig)}${ac.kgEditBy?' (por '+nm(ac.kgEditBy)+')':''}.</div>`:''}<div class="mut">Ingresó el ${tfmt(ac.startAt)}. ${sec?'Lleva '+dur(Date.now()-ac.startAt)+' secando.':'Secó en '+dur(ac.dryAt-ac.startAt)+'.'}</div>${ac.airAt?`<div class="who">💨 Fase de aire desde ${tfmt(ac.airAt)} · ${ac.dryAt?'duró '+dur(ac.dryAt-ac.airAt):'lleva '+dur(Date.now()-ac.airAt)}${ac.airBy?' · iniciada por <b>'+nm(ac.airBy)+'</b>':''}</div>`:''}<div class="who">👤 ${ac.by?'Cargada a secar por <b>'+nm(ac.by)+'</b>':'Cargada a secar: autor no registrado'}</div>${!sec&&ac.dryAt?`<div class="who">👤 ${ac.dryBy?'Marcada como seca por <b>'+nm(ac.dryBy)+'</b>':'Marcada como seca: autor no registrado'} · ${tfmt(ac.dryAt)}</div>`:''}${vt.length?`<div class="mut">${vt.length} volteo${vt.length===1?'':'s'}. Último: ${tfmt(vt[vt.length-1].ts)}.</div>`:''}${ent.length?`<div class="mut">Ya salieron ${sacos} sacos secos (${fk(kgS)}). Rendimiento: ${nf.format(r2(kgS/ac.kgHumedo*100))} % del peso ingresado.</div>`:''}</div>`
+}
+function renderDmList(ac,state){
+  const cyc=state==='seco';
+  const l=(cyc?cycEntries(ac.id):db.entradas.filter(e=>e.dryer===curDryer&&e.date===selDate)).sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
+  $('dmListT').textContent=cyc?'Sacos secos registrados de esta carga':'Sacos secos registrados el '+fshort(selDate);
+  $('dmList').innerHTML=l.length?l.map(e=>`<div class="item"><div><b>${e.sacks} sacos</b>: ${fk(e.kg)} (${ft(e.kg)})${modoTxt(e)}<div class="mut">${cyc?esc(fshort(e.date))+'. ':''}${esc(e.tipo?e.tipo+' de ':'')}${esc(e.origin||'procedencia sin indicar')}</div><div class="mut">Destino: ${esc(lname(e.loteId))}</div>${whoLine(e)}</div><div class="acts"><button class="btn sm" onclick="editEntry('${e.id}')">Editar</button><button class="btn sm red" onclick="delEnt('${e.id}')" aria-label="Eliminar">✕</button></div></div>`).join(''):'<div class="mut">'+(cyc?'Todavía no registras sacos de esta carga.':'Esta secadora no tiene registros ese día.')+'</div>'
+}
+function refreshDryerModal(){
+  const n=curDryer,ac=activeOf(n),state=ac?ac.status:'libre',mine=db.entradas.filter(e=>e.dryer===n),ym=selDate.slice(0,7);
+  $('dmT').textContent=dlabel(n);
+  $('dmSub').textContent='Salida seca acumulada: '+fk(sum(mine,e=>e.kg))+' ('+ft(sum(mine,e=>e.kg))+'). Este mes: '+fk(sum(mine.filter(e=>e.date.startsWith(ym)),e=>e.kg))+'.';
+  const co=(arr,f)=>{const c={};arr.forEach(x=>{const v=f(x);if(v)c[v]=(c[v]||0)+1});return c};
+  const oc=co(db.ciclos.concat(db.entradas),x=>x.origin),tc=co(db.ciclos,x=>x.tipo);
+  TIPOS_BASE.forEach(t=>{if(!tc[t])tc[t]=0});
+  const ol=Object.keys(oc).sort((a,b)=>oc[b]-oc[a]).slice(0,8),tl=Object.keys(tc).sort((a,b)=>tc[b]-tc[a]);
+  setChips('tipoChips','st',tl);setChips('origChips','so',ol);setChips('foChips','fo',ol);
+  $('blkStatus').hidden=!ac;if(ac)$('blkStatus').innerHTML=cycleSummary(ac);
+  $('blkStart').hidden=state!=='libre';
+  $('blkDrying').hidden=state!=='secando';$('btnDelCiclo').hidden=!isAdm;
+  {const a=ac&&state==='secando'?ac.airAt:null;$('btnAir').hidden=!!a;$('btnAirX').hidden=!a;$('btnDry').disabled=!a;$('airHint').textContent=a?'En fase de aire (solo ventilación): ya puedes marcar el cacao como seco.':'Antes de marcar como seco, inicia la fase de aire (solo ventilación) y deja pasar el tiempo necesario.'}
+  const evs=ac?evsOf(ac.id):[];
+  $('evBox').hidden=!ac||(!evs.length&&state!=='secando');
+  $('evList').innerHTML=evs.length?evGroups(evs,e=>`<div class="item"><div><b>${hfmt(e.ts)}</b> ${evTxt(e)}<div class="mut">${tfmt(e.ts)}</div>${evWho(e)}</div>${state==='secando'?`<div class="acts"><button class="btn sm red" onclick="delEv('${e.id}')" aria-label="Eliminar">✕</button></div>`:''}</div>`):EMP('box','Aún sin registros','Anota la primera temperatura, volteo o calificación de esta carga.');
+  $('blkBag').hidden=!(state==='seco'||editEnt);
+  $('blkDone').hidden=state!=='seco';
+  if(ac)$('btnReopen').hidden=cycEntries(ac.id).length>0;
+  renderDmList(ac,state);fillLote();
+  const past=db.ciclos.filter(c=>Number(c.dryer)===Number(n)&&(!ac||c.id!==ac.id)).sort((a,b)=>b.startAt-a.startAt);
+  $('pastBox').hidden=!past.length;
+  $('pastList').innerHTML=past.slice(0,5).map(c=>{const t=cycStats(c);return `<div class="item"><div><b>${esc(c.tipo||'Sin tipo')}</b> de ${esc(c.origin||'sin procedencia')}<div class="mut">${tfmt(c.startAt)}. ${fk(c.kgHumedo)}${t.ent.length?' → '+fk(t.kgS)+' secos':''}</div></div><div class="acts"><button class="btn sm" onclick="openCiclo('${c.id}')">Ver detalle</button></div></div>`}).join('')+(past.length>5?`<div class="ma" style="justify-content:flex-start"><button class="btn sm" onclick="goHist(${n})">Ver las ${past.length} cargas</button></div>`:'')
+}
+/* --- flujo de la carga --- */
+function startCiclo(){
+  const err=m=>{$('sErr').textContent=m};err('');
+  const v=$('sd').value,tipo=$('st').value.trim(),origin=$('so').value.trim(),prod=$('sp').value.trim(),finca=$('sf').value.trim(),q=num($('sq').value),u=$('su').value;
+  if(activeOf(curDryer))return err('Esta secadora ya tiene una carga en proceso.');
+  if(!v)return err('Indica la fecha y hora de ingreso.');
+  if(!tipo)return err('Indica el tipo de cacao.');
+  if(!origin)return err('Indica la procedencia.');
+  if(!(q>0))return err('Indica cuánto cacao por secar ingresó.');
+  const kg=r2(u==='t'?q*1000:u==='qq'?q*UQQ:q),d=new Date(v);
+  col('sec_ciclos').doc(nid()).set({dryer:curDryer,startAt:d.getTime(),startDate:iso(d),tipo,origin,productor:prod,finca,kgHumedo:kg,status:'secando',dryAt:null,endAt:null,by:myEmail}).catch(fail);
+  logAct('inició una carga de '+tipo+' ('+fk(kg)+') en '+dlabel(curDryer),curDryer);
+  $('sq').value='';$('sp').value='';$('sf').value=''
+}
+function addTemp(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='secando')return;
+  const raw=$('tt').value.trim(),t=num(raw);
+  if(!raw||isNaN(t)||t<0||t>200)return $('eErr').textContent='Ingresa una temperatura válida en °C (de 0 a 200).';
+  $('eErr').textContent='';
+  col('sec_eventos').doc(nid()).set({cycleId:ac.id,dryer:ac.dryer,ts:Date.now(),type:'temp',value:t,by:myEmail}).catch(fail);
+  logAct('registró '+fnum(t)+' °C en '+dlabel(ac.dryer),ac.dryer);
+  $('tt').value=''
+}
+function addVolteo(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='secando')return;
+  const raw=$('tv').value.trim(),t=raw?num(raw):null;
+  if(raw&&(isNaN(t)||t<=0||t>1440))return $('eErr').textContent='Ingresa el tiempo de volteo en minutos (o déjalo vacío).';
+  $('eErr').textContent='';
+  col('sec_eventos').doc(nid()).set({cycleId:ac.id,dryer:ac.dryer,ts:Date.now(),type:'volteo',value:t,by:myEmail}).catch(fail);
+  logAct('registró un volteo'+(t?' de '+fnum(t)+' min':'')+' en '+dlabel(ac.dryer),ac.dryer);
+  $('tv').value=''
+}
+function addCal(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='secando')return;
+  if(rateSel===null)return $('eErr').textContent='Escribe la calificación con el teclado.';
+  $('eErr').textContent='';
+  col('sec_eventos').doc(nid()).set({cycleId:ac.id,dryer:ac.dryer,ts:Date.now(),type:'cal',value:rateSel,note:$('tn').value.trim(),by:myEmail}).catch(fail);
+  logAct('registró calificación '+rateSel+' en '+dlabel(ac.dryer),ac.dryer);
+  $('tn').value='';pickRate(null)
+}
+function delEv(id){
+  const e=db.eventos.find(x=>x.id===id);
+  if(confirm('¿Eliminar este registro?')){col('sec_eventos').doc(id).delete().catch(fail);if(e)logAct('eliminó un registro de '+(e.type==='temp'?'temperatura':e.type==='volteo'?'volteo':'calificación')+' en '+dlabel(e.dryer),e.dryer)}
+}
+function editPeso(){
+  const ac=activeOf(curDryer);if(!ac)return;
+  if(ac.kgEdited)return toast('El peso ya se corrigió una vez y no se puede cambiar de nuevo.',true);
+  const r=prompt('Corregir el peso por secar (en kg).\nSolo se puede corregir UNA vez. Ahora dice: '+fk(ac.kgHumedo),String(ac.kgHumedo).replace('.',','));if(r===null)return;
+  const q=r2(num(r));if(!(q>0))return toast('Escribe un peso válido en kg.',true);
+  if(confirm('Cambiar el peso de '+fk(ac.kgHumedo)+' a '+fk(q)+'.\nEsta corrección solo se permite una vez. ¿Confirmas?')){
+    col('sec_ciclos').doc(ac.id).update({kgHumedo:q,kgEdited:true,kgOrig:ac.kgHumedo,kgEditBy:myEmail,kgEditAt:Date.now()}).catch(fail);
+    logAct('corrigió el peso de la carga de '+dlabel(ac.dryer)+' de '+fk(ac.kgHumedo)+' a '+fk(q),ac.dryer)}
+}
+function startAire(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='secando'||ac.airAt)return;
+  if(confirm('¿Iniciar la fase de aire? Desde ahora se contará el tiempo con solo ventilación.')){col('sec_ciclos').doc(ac.id).update({airAt:Date.now(),airBy:myEmail}).catch(fail);logAct('inició la fase de aire en '+dlabel(ac.dryer),ac.dryer)}
+}
+function cancelAire(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='secando'||!ac.airAt)return;
+  if(confirm('¿Cancelar la fase de aire y volver al secado normal?')){col('sec_ciclos').doc(ac.id).update({airAt:null,airBy:null}).catch(fail);logAct('canceló la fase de aire en '+dlabel(ac.dryer),ac.dryer)}
+}
+function markDry(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='secando')return;
+  if(!ac.airAt)return toast('Primero inicia la fase de aire.',true);
+  if(confirm('¿Marcar este cacao como seco? Se habilitará el registro de sacos secos y ya no podrás agregar temperaturas.')){
+    col('sec_ciclos').doc(ac.id).update({status:'seco',dryAt:Date.now(),dryBy:myEmail}).catch(fail);
+    logAct('marcó como seco el cacao de '+dlabel(ac.dryer),ac.dryer)
+  }
+}
+function reopenCiclo(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='seco'||cycEntries(ac.id).length)return;
+  if(confirm('¿Volver a marcar la carga como “secando”?')){
+    col('sec_ciclos').doc(ac.id).update({status:'secando',dryAt:null,dryBy:null}).catch(fail);
+    logAct('volvió a marcar como “secando” la carga de '+dlabel(ac.dryer),ac.dryer)
+  }
+}
+function finishCiclo(){
+  const ac=activeOf(curDryer);if(!ac||ac.status!=='seco')return;
+  const n=cycEntries(ac.id).length;
+  if(!confirm(n?'¿Finalizar la descarga? La secadora quedará libre para una nueva carga.':'No registraste sacos secos de esta carga. ¿Finalizar de todos modos?'))return;
+  editEnt=null;col('sec_ciclos').doc(ac.id).update({status:'finalizada',endAt:Date.now(),endBy:myEmail}).catch(fail);
+  logAct('finalizó la descarga y liberó '+dlabel(ac.dryer),ac.dryer)
+}
+function delCiclo(){const ac=activeOf(curDryer);if(ac)delCicloId(ac.id)}
+function delCicloId(id){
+  if(!isAdm)return alert('Solo el administrador puede eliminar cargas.');
+  const c=db.ciclos.find(x=>x.id===id);if(!c)return;
+  const evs=evsOf(id),ent=cycEntries(id),porLote={};
+  ent.forEach(e=>{porLote[e.loteId]=r2((porLote[e.loteId]||0)+e.kg)});
+  for(const lid of Object.keys(porLote)){
+    if(stockOf(lid)-porLote[lid]<-0.005)return alert('No se puede eliminar: parte del cacao de esta carga ya se despachó (lote "'+lname(lid)+'"). Edita o elimina primero esos despachos.')
+  }
+  const kgS=sum(ent,e=>e.kg);
+  const msg='¿Eliminar esta carga de '+dlabel(c.dryer)+' ('+(c.tipo||'sin tipo')+', '+fk(c.kgHumedo)+')?\n\nTambién se eliminarán '+evs.length+' temperatura(s)/calificación(es)'+(ent.length?' y '+ent.length+' registro(s) de sacos secos ('+fk(kgS)+'), que se descontarán del almacenamiento':'')+'.\n\nNo se puede deshacer.';
+  if(!confirm(msg))return;
+  const b=fdb.batch();
+  b.delete(col('sec_ciclos').doc(id));
+  evs.forEach(e=>b.delete(col('sec_eventos').doc(e.id)));
+  ent.forEach(e=>b.delete(col('sec_entradas').doc(e.id)));
+  Object.keys(porLote).forEach(lid=>{
+    const quedan=db.entradas.some(x=>x.loteId===lid&&x.cycleId!==id),desp=db.despachos.some(x=>x.loteId===lid);
+    if(!quedan&&!desp)b.delete(col('sec_lotes').doc(lid))
+  });
+  logAct('eliminó la carga de '+(c.tipo||'sin tipo')+' ('+fk(c.kgHumedo)+') de '+dlabel(c.dryer),c.dryer);
+  b.commit().then(()=>closeM('cycM')).catch(fail)
+}
+function editEntry(id){editEnt=db.entradas.find(x=>x.id===id);if(!editEnt)return;loadEdit(editEnt);refreshDryerModal();$('fs').focus()}
+function saveEnt(){
+  const err=m=>{$('fErr').textContent=m};err('');
+  const date=$('fd').value,sacks=Math.round(Number($('fs').value)),lv=$('fl').value,nn=$('fn').value.trim(),ac=activeOf(curDryer);
+  if(!editEnt&&(!ac||ac.status!=='seco'))return err('Primero marca el cacao como seco para registrar los sacos.');
+  if(!date)return err('Selecciona la fecha.');
+  if(!(sacks>=1))return err('Ingresa cuántos sacos salieron.');
+  if(!lv)return err('Elige un destinatario o lote, o crea uno nuevo.');
+  let loteId=lv,newLote=null;
+  if(lv==='__new'){
+    if(!nn)return err('Escribe el nombre del nuevo destinatario o lote.');
+    const ex=Object.values(LI).find(x=>x.stock>0.005&&x.l.name.toLowerCase()===nn.toLowerCase());
+    if(ex)loteId=ex.l.id;else{loteId=nid();newLote={name:nn,created:date,by:myEmail,ts:Date.now(),code:nextCode(date),producto:'Cacao seco'}}
+  }
+  const bc=bagCalc();
+  if(bagMode==='saco'&&!(bc.kgS>0&&bc.kgS<=300))return err('Escribe el peso de cada saco en kg.');
+  if(bagMode==='bas'&&!(bc.kg>0))return err('Escribe el peso total de la báscula en kg.');
+  const kg=bc.kg;
+  if(editEnt){
+    const after=stockOf(editEnt.loteId)-editEnt.kg+(editEnt.loteId===loteId?kg:0);
+    if(after<-0.005)return err('No se puede aplicar el cambio: parte de ese cacao ya se despachó y el lote quedaría en negativo.')
+  }
+  const cyc=editEnt?editEnt.cycleId:ac.id;
+  const origin=editEnt?(editEnt.cycleId?(editEnt.origin||''):$('fo').value.trim()):ac.origin;
+  const tipo=editEnt?(editEnt.tipo||''):(ac.tipo||'');
+  const data={date,dryer:curDryer,sacks,kgSaco:bc.kgS,modo:bagMode,kg,origin,tipo,loteId,productor:editEnt?(editEnt.productor||''):(ac.productor||''),finca:editEnt?(editEnt.finca||''):(ac.finca||'')};if(cyc)data.cycleId=cyc;
+  const _edit=!!editEnt;
+  if(_edit){data.by=editEnt.by||'';data.ts=editEnt.ts||0;data.upBy=myEmail;data.upTs=Date.now()}else{data.by=myEmail;data.ts=Date.now()}
+  const b=fdb.batch();
+  if(newLote)b.set(col('sec_lotes').doc(loteId),newLote);
+  b.set(col('sec_entradas').doc(editEnt?editEnt.id:nid()),data);
+  b.commit().catch(fail);
+  logAct((_edit?'editó el registro de ':'registró ')+sacks+' sacos secos ('+fk(kg)+') en '+dlabel(curDryer)+' para '+(newLote?newLote.name:lname(loteId)),curDryer);
+  formLote=loteId;editEnt=null;selDate=date;
+  resetForm();render()
+}
+function delEnt(id){
+  const e=db.entradas.find(x=>x.id===id);if(!e)return;
+  if(stockOf(e.loteId)-e.kg<-0.005)return alert('No se puede eliminar: ese cacao ya fue despachado (el lote quedaría en negativo). Edita o elimina primero el despacho.');
+  if(!confirm('¿Eliminar este registro de '+e.sacks+' sacos?'))return;
+  const b=fdb.batch();b.delete(col('sec_entradas').doc(id));
+  const otros=db.entradas.some(x=>x.loteId===e.loteId&&x.id!==id),desp=db.despachos.some(x=>x.loteId===e.loteId);
+  if(!otros&&!desp)b.delete(col('sec_lotes').doc(e.loteId));
+  b.commit().catch(fail);
+  logAct('eliminó un registro de '+e.sacks+' sacos ('+fk(e.kg)+') de '+dlabel(e.dryer),e.dryer);
+  if(editEnt&&editEnt.id===id){editEnt=null;resetForm();refreshDryerModal()}
+}
+function goDryer(n){setTab('sec');openDryer(n)}
+
+/* ---------- Calendario ---------- */
+function renderCal(){
+  const [y,m]=calMonth.split('-').map(Number),days=new Date(y,m,0).getDate(),off=(new Date(y,m-1,1).getDay()+6)%7,today=iso(new Date());
+  $('calTitle').textContent=cap(new Date(y,m-1,1).toLocaleDateString('es-EC',{month:'long',year:'numeric'}));
+  const P={},D={};
+  db.entradas.forEach(e=>{if(e.date.startsWith(calMonth)){const p=P[e.date]||(P[e.date]={kg:0,s:0});p.kg+=e.kg;p.s+=e.sacks}});
+  db.despachos.forEach(d=>{if(d.date.startsWith(calMonth))D[d.date]=(D[d.date]||0)+d.kg});
+  let h=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(w=>`<div class="wd">${w}</div>`).join('');
+  for(let i=0;i<off;i++)h+='<div class="cd empty"></div>';
+  for(let d=1;d<=days;d++){
+    const ds=calMonth+'-'+String(d).padStart(2,'0'),p=P[ds],x=D[ds];
+    h+=`<button class="cd${ds===today?' today':''}${ds===selDate?' sel':''}" onclick="openDay('${ds}')"><span class="n">${d}</span>${p?`<span class="p">+${fc(p.kg)}</span><span class="p">${p.s} sacos</span>`:''}${x?`<span class="d">−${fc(x)}</span>`:''}</button>`
+  }
+  $('calGrid').innerHTML=h;
+  const me=db.entradas.filter(e=>e.date.startsWith(calMonth)),md=db.despachos.filter(d=>d.date.startsWith(calMonth));
+  $('calStats').innerHTML=stat('Salió de las secadoras este mes',fk(sum(me,e=>e.kg)),ft(sum(me,e=>e.kg))+' · '+me.reduce((a,e)=>a+e.sacks,0)+' sacos')+stat('Despachado este mes',fk(sum(md,d=>d.kg)),ft(sum(md,d=>d.kg)))
+}
+function stat(l,v,s,main){return `<div class="stat${main?' main':''}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s||''}</div></div>`}
+function openDay(d){
+  const en=db.entradas.filter(e=>e.date===d).sort((a,b)=>dord(a.dryer)-dord(b.dryer)||a.id.localeCompare(b.id)),ds=db.despachos.filter(x=>x.date===d);
+  $('dayT').textContent=fdate(d);
+  const cy=db.ciclos.filter(c=>c.startDate===d).sort((a,b)=>a.startAt-b.startAt);
+  let h=`<div class="sech">Cacao que entró a secar: ${fk(sum(cy,c=>c.kgHumedo))}</div>`+(cy.length?cy.map(c=>`<div class="item"><div><b>${dlabel(c.dryer)}</b>: ${fk(c.kgHumedo)} de ${esc(c.tipo||'cacao')}<div class="mut">${esc(c.origin||'')}. Ingresó a las ${hfmt(c.startAt)}.</div></div></div>`).join(''):EMP('box','Sin cargas este día','Las cargas que ingreses a las secadoras aparecerán aquí.'));
+  h+=`<div class="sech">Cacao seco que salió de las secadoras: ${fk(sum(en,e=>e.kg))}</div>`;
+  h+=en.length?en.map(e=>`<div class="item"><div><b>${dlabel(e.dryer)}</b>: ${e.sacks} sacos, ${fk(e.kg)}<div class="mut">Procedencia: ${esc(e.origin||'sin indicar')}</div><div class="mut">Destino: ${esc(lname(e.loteId))}</div>${whoLine(e)}</div><div class="acts"><button class="btn sm" onclick="closeM('dayM');openDryer(${e.dryer},'${d}','${e.id}')">Editar</button></div></div>`).join(''):EMP('box','Sin salidas este día','Aquí verás los sacos secos que salgan.');
+  h+=`<div class="sech">Despachado: ${fk(sum(ds,x=>x.kg))}</div>`;
+  h+=ds.length?ds.map(x=>`<div class="item"><div><b>${esc(lname(x.loteId))}</b>: ${fk(x.kg)} (${ft(x.kg)})${x.note?`<div class="mut">${esc(x.note)}</div>`:''}${whoLine(x,'Despachado')}</div></div>`).join(''):EMP('box','Sin despachos este día','Los despachos de ese día aparecerán aquí.');
+  $('dayB').innerHTML=h;
+  $('dayOpen').onclick=()=>{selDate=d;calMonth=d.slice(0,7);closeM('dayM');setTab('sec')};
+  openM('dayM')
+}
+
+/* ---------- Resumen ---------- */
+function groupSum(arr,keyf,valf){const o={};arr.forEach(x=>{const k=keyf(x);o[k]=(o[k]||0)+valf(x)});return Object.entries(o).sort((a,b)=>b[1]-a[1])}
+function renderRes(){
+  $('actCard').hidden=!isAdm;renderProd();
+  {const ids=LAYOUT.flat();let nS=0,nK=0,nA=0;ids.forEach(n=>{const a=activeOf(n);if(a){if(a.status==='secando'){if(a.airAt)nA++;else nS++}else nK++}});const nL=ids.length-nS-nA-nK;
+  $('procSum').innerHTML=`<span class="pc a"><b>${nS}</b> secadora${nS===1?'':'s'} secando</span><span class="pc b"><b>${nA}</b> en fase de aire</span><span class="pc g"><b>${nK}</b> secadora${nK===1?'':'s'} lista${nK===1?'':'s'} para llenar sacos</span><span class="pc n"><b>${nL}</b> libre${nL===1?'':'s'}</span>`}
+  const L=Object.values(LI),open=L.filter(x=>x.stock>0.005).sort((a,b)=>a.l.name.localeCompare(b.l.name)),closed=L.filter(x=>x.stock<=0.005&&x.ing>0).sort((a,b)=>a.l.name.localeCompare(b.l.name));
+  const prod=sum(db.entradas,e=>e.kg),desp=sum(db.despachos,d=>d.kg),stock=sum(open,x=>x.stock),ym=iso(new Date()).slice(0,7),mProd=sum(db.entradas.filter(e=>e.date.startsWith(ym)),e=>e.kg);
+  $('resStats').innerHTML=
+    stat('Cacao que debe haber en almacenamiento',ft(stock),fk(stock)+' · ≈ '+Math.round(stock/SACO)+' sacos',true)+
+    stat('Total que salió de las secadoras',ft(prod),fk(prod)+' · '+db.entradas.reduce((a,e)=>a+e.sacks,0)+' sacos')+
+    stat('Total despachado',ft(desp),fk(desp))+
+    stat('Salió este mes',ft(mProd),fk(mProd));
+  $('resLotes').innerHTML=open.length?open.map(x=>{
+    const orig=Object.entries(x.orig).sort((a,b)=>b[1]-a[1]).map(([o,k])=>esc(o)+' '+ft(k)).join(', ');
+    return `<div class="lote"><div class="lcode">${esc(lcode(x.l))}</div><div class="lh"><b>${esc(x.l.name)}</b><span class="big">${ft(x.stock)}</span></div><div class="mut">En almacén: ${fk(x.stock)} (≈ ${Math.round(x.stock/SACO)} sacos)</div><div class="mut"><b>${origN(x)}</b> origen${origN(x)===1?'':'es'} · <b>${db.entradas.filter(e=>e.loteId===x.l.id).reduce((a,e)=>a+e.sacks,0)}</b> sacos ingresados${ubicTxt(x.l)?' · '+esc(ubicTxt(x.l)):''}</div><div class="mut">Ingresó ${fk(x.ing)}. Despachado ${fk(x.desp)}.</div><div class="mut">Procedencia: ${orig}</div>${loteDetail(x)}<div class="acts"><button class="btn primary sm" onclick="openFicha('${x.l.id}')">Ver ficha</button><button class="btn sm" onclick="printFicha('${x.l.id}')">Imprimir</button><button class="btn sm" onclick="openFicha('${x.l.id}',{tab:'qr'})">QR</button><button class="btn leaf sm" onclick="openDisp('${x.l.id}')">Despachar</button><button class="btn sm" onclick="renameLote('${x.l.id}')">Renombrar</button></div></div>`}).join(''):'<div class="mut">No hay cacao en almacenamiento. Se llena cuando registras sacos en una secadora.</div>';
+  $('resClosed').innerHTML=closed.length?closed.map(x=>`<div class="item"><div><div class="lcode">${esc(lcode(x.l))}</div><b>${esc(x.l.name)}</b><div class="mut">Ingresó ${fk(x.ing)}, despachado por completo.</div>${loteDetail(x)}<div class="acts" style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn primary sm" onclick="openFicha('${x.l.id}')">Ver ficha</button><button class="btn sm" onclick="printFicha('${x.l.id}')">Imprimir</button></div></div></div>`).join(''):EMP('box','Aún no hay lotes cerrados','Aparecen cuando un lote se despacha por completo.');
+  const ds=[...db.despachos].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id)).slice(0,40);
+  $('resDesp').innerHTML=ds.length?ds.map(d=>`<div class="item"><div><b>${esc(lname(d.loteId))}</b>: ${fk(d.kg)} (${ft(d.kg)})<div class="mut">${esc(fshort(d.date))}${d.note?' — '+esc(d.note):''}</div>${whoLine(d,'Despachado')}</div><div class="acts"><button class="btn sm" onclick="openDisp(null,'${d.id}')">Editar</button>${isAdm?`<button class="btn sm red" onclick="delDisp('${d.id}')" aria-label="Eliminar despacho">✕</button>`:''}</div></div>`).join(''):EMP('box','Aún no hay despachos','Registra el primero y aparecerá aquí.');
+  const go=groupSum(db.entradas,e=>e.origin||'Sin procedencia',e=>e.kg);
+  $('resOrig').innerHTML=go.length?'<table class="t"><tr><th>Procedencia</th><th class="r">Toneladas</th></tr>'+go.map(([o,k])=>`<tr><td>${esc(o)}</td><td class="r">${nf.format(r2(k/1000))}</td></tr>`).join('')+'</table>':EMP('box','Sin datos todavía','Se llenará cuando registres cacao en las secadoras.');
+  const gd=groupSum(db.entradas,e=>e.dryer,e=>e.kg).sort((a,b)=>dord(a[0])-dord(b[0]));
+  $('resDry').innerHTML=gd.length?'<table class="t"><tr><th>Secadora</th><th class="r">Sacos</th><th class="r">Toneladas</th></tr>'+gd.map(([d,k])=>`<tr><td>${dlabel(d)}</td><td class="r">${db.entradas.filter(e=>String(e.dryer)===String(d)).reduce((a,e)=>a+e.sacks,0)}</td><td class="r">${nf.format(r2(k/1000))}</td></tr>`).join('')+'</table>':EMP('box','Sin datos todavía','Se llenará cuando registres cacao en las secadoras.')
+}
+function renameLote(id){
+  const l=db.lotes.find(x=>x.id===id);if(!l)return;
+  const n=prompt('Nuevo nombre del destinatario o lote:',l.name);
+  if(n&&n.trim()){col('sec_lotes').doc(id).update({name:n.trim(),rev:(l.rev||0)+1,upBy:myEmail,upTs:Date.now()}).catch(fail);logAct('renombró el lote “'+l.name+'” a “'+n.trim()+'”')}
+}
+
+/* ---------- Historial de cargas ---------- */
+let histDry='all',histMes='all';
+function cycStats(c){
+  const ent=cycEntries(c.id),kgS=sum(ent,e=>e.kg),tm=evsOf(c.id,'temp').map(e=>e.value),clE=evsOf(c.id,'cal'),cmax=clE.length&&clE.every(e=>e.max===10)?10:0,cl=clE.map(e=>cmax===10||e.max!==10?e.value:e.value*4),vt=evsOf(c.id,'volteo');
+  return {ent,kgS,sacos:ent.reduce((a,e)=>a+e.sacks,0),tm,cl,cmax,vt,
+    tmin:tm.length?Math.min(...tm):null,tmax:tm.length?Math.max(...tm):null,tavg:tm.length?r2(tm.reduce((a,x)=>a+x,0)/tm.length):null,
+    cavg:cl.length?r2(cl.reduce((a,x)=>a+x,0)/cl.length):null,rend:c.kgHumedo>0&&ent.length?r2(kgS/c.kgHumedo*100):null}
+}
+const stLabel=c=>c.status==='secando'?'Secando':c.status==='seco'?'Seco, descargando':'Finalizada';
+const stChip=c=>`<span class="chip ${c.status==='finalizada'?'':c.status==='secando'?'a':'g'}">${stLabel(c)}</span>`;
+function filteredCiclos(){return db.ciclos.filter(c=>(histDry==='all'||String(c.dryer)===histDry)&&(histMes==='all'||(c.startDate||'').startsWith(histMes))).sort((a,b)=>b.startAt-a.startAt)}
+function setHist(k,v){if(k==='d')histDry=v;else histMes=v;render()}
+function goHist(n){histDry=String(n);histMes='all';closeM('dryerM');setTab('res');setTimeout(()=>{const e=$('histCard');if(e)e.scrollIntoView({behavior:'smooth'})},80)}
+function tempChart(tm){
+  if(tm.length<2)return '';
+  const W=320,H=150,pl=36,pr=10,pt=10,pb=24,t0=tm[0].ts,t1=tm[tm.length-1].ts,vs=tm.map(e=>e.value);
+  let lo=Math.min(...vs),hi=Math.max(...vs);if(hi-lo<5){lo-=2.5;hi+=2.5}lo=Math.floor(lo);hi=Math.ceil(hi);
+  const x=t=>pl+(t1===t0?0:(t-t0)/(t1-t0))*(W-pl-pr),y=v=>pt+(hi-v)/(hi-lo)*(H-pt-pb);
+  const mid=(lo+hi)/2,tl=t=>(t1-t0>864e5?tfmt(t):hfmt(t));
+  const grid=[lo,mid,hi].map(v=>`<line class="gl" x1="${pl}" x2="${W-pr}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/><text x="${pl-4}" y="${(y(v)+3).toFixed(1)}" text-anchor="end">${fnum(r2(v))}</text>`).join('');
+  const pts=tm.map(e=>x(e.ts).toFixed(1)+','+y(e.value).toFixed(1)).join(' ');
+  const dots=tm.map(e=>`<circle class="dt" cx="${x(e.ts).toFixed(1)}" cy="${y(e.value).toFixed(1)}" r="3.5"><title>${hfmt(e.ts)}: ${fnum(e.value)} °C</title></circle>`).join('');
+  return `<svg class="tchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de temperaturas en °C durante el secado">${grid}<polyline class="ln" points="${pts}"/>${dots}<text x="${pl}" y="${H-6}" text-anchor="start">${tl(t0)}</text><text x="${W-pr}" y="${H-6}" text-anchor="end">${tl(t1)}</text></svg>`
+}
+function openCiclo(id){
+  const c=db.ciclos.find(x=>x.id===id);if(!c)return;
+  const s=cycStats(c),tm=evsOf(id,'temp'),vt=evsOf(id,'volteo'),cl=evsOf(id,'cal'),ent=[...s.ent].sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
+  const kv=(l,v)=>`<div class="kv"><span>${l}</span><b>${v}</b></div>`;
+  $('cyT').textContent=dlabel(c.dryer);
+  let h=`<div class="sub">${esc(c.tipo||'Sin tipo')} de ${esc(c.origin||'procedencia sin indicar')} ${stChip(c)}</div><div class="kvs">`+
+    kv('Ingresó',tfmt(c.startAt))+(c.by?kv('Cargada por',nm(c.by)):'')+kv('Cacao por secar',fk(c.kgHumedo)+' ('+ft(c.kgHumedo)+')')+
+    kv('Marcado como seco',c.dryAt?tfmt(c.dryAt)+' ('+dur(c.dryAt-c.startAt)+' de secado)':'Todavía secando')+(c.dryBy?kv('Marcado seco por',nm(c.dryBy)):'')+(c.endBy?kv('Finalizada por',nm(c.endBy)):'')+
+    kv('Descarga finalizada',c.endAt?tfmt(c.endAt):'En curso')+(c.endBy?kv('Finalizada por',nm(c.endBy)):'')+
+    kv('Sacos secos',ent.length?s.sacos+' sacos, '+fk(s.kgS)+' ('+ft(s.kgS)+')':'Sin registrar')+
+    (s.rend!=null?kv('Rendimiento',nf.format(s.rend)+' % del peso ingresado'):'')+'</div>';
+  h+=`<div class="sech">Temperaturas (${tm.length})</div>`;
+  if(tm.length){
+    h+=`<div class="kvs">${kv('Mínima',fnum(s.tmin)+' °C')}${kv('Máxima',fnum(s.tmax)+' °C')}${kv('Promedio',fnum(s.tavg)+' °C')}</div>`+tempChart(tm);
+    h+=tm.map(e=>`<div class="item"><div><b>${hfmt(e.ts)}</b> ${fnum(e.value)} °C<div class="mut">${tfmt(e.ts)}</div>${evWho(e)}</div></div>`).join('')
+  }else h+='<div class="mut">No se registraron temperaturas.</div>';
+  h+=`<div class="sech">Volteos (${vt.length})</div>`;
+  h+=vt.length?vt.map(e=>`<div class="item"><div><b>${hfmt(e.ts)}</b> ${e.value>0?fnum(e.value)+' min':'volteo'}<div class="mut">${tfmt(e.ts)}</div>${evWho(e)}</div></div>`).join(''):'<div class="mut">No se registraron volteos.</div>';
+  h+=`<div class="sech">Calificaciones (${cl.length})</div>`;
+  h+=cl.length?(`<div class="mut">Promedio: ${fnum(s.cavg)} ${s.cmax?' de '+s.cmax:''}</div>`+cl.map(e=>`<div class="item"><div><b>${hfmt(e.ts)}</b> ${calTxt(e)}${e.note?': '+esc(e.note):''}<div class="mut">${tfmt(e.ts)}</div>${evWho(e)}</div></div>`).join('')):'<div class="mut">No se registraron calificaciones.</div>';
+  h+=`<div class="sech">Sacos secos (${ent.length} registro${ent.length===1?'':'s'})</div>`;
+  h+=ent.length?ent.map(e=>`<div class="item"><div><b>${e.sacks} sacos</b>: ${fk(e.kg)} (${ft(e.kg)})${modoTxt(e)}<div class="mut">${esc(fshort(e.date))}. Destino: ${esc(lname(e.loteId))}</div>${whoLine(e)}</div><div class="acts"><button class="btn sm" onclick="closeM('cycM');openDryer(${e.dryer},'${e.date}','${e.id}')">Editar</button></div></div>`).join(''):'<div class="mut">No se han registrado sacos de esta carga.</div>';
+  if(isAdm)h+=`<div class="ma" style="justify-content:flex-start"><button class="btn red" onclick="delCicloId('${c.id}')">Eliminar esta carga</button></div>`;
+  $('cyB').innerHTML=h;$('cyB').scrollTop=0;openM('cycM');$('cycM').querySelector('.sheet').scrollTop=0
+}
+function renderResExtra(){
+  const act=db.ciclos.filter(c=>c.status!=='finalizada').sort((a,b)=>dord(a.dryer)-dord(b.dryer));
+  const hum=sum(act,c=>c.kgHumedo);
+  $('resStats').insertAdjacentHTML('beforeend',stat('Por secar en las secadoras ahora',ft(hum),fk(hum)+' en '+act.length+' secadora'+(act.length===1?'':'s')));
+  $('resProc').innerHTML=act.length?act.map(c=>{const t=evsOf(c.id,'temp').pop(),vo=evsOf(c.id,'volteo').pop(),cal=evsOf(c.id,'cal').pop();
+    return `<div class="item pr ${c.status==='secando'?'ps':'pg'}"><div><b>${dlabel(c.dryer)}</b>: ${esc(c.tipo||'Sin tipo')} de ${esc(c.origin||'procedencia sin indicar')}<div class="mut">${fk(c.kgHumedo)} por secar.${c.by?' Cargada por '+nm(c.by)+'.':''}</div><div class="stl">${stChip(c)}<span>${c.status==='secando'?'Lleva '+dur(Date.now()-c.startAt)+' secando':'Ya está seco · registrando sacos'}</span></div>${vo?`<div class="mut">Último volteo: ${hfmt(vo.ts)}${vo.by?' · por <b>'+nm(vo.by)+'</b>':''}</div>`:''}${t?`<div class="mut">Última temperatura: ${fnum(t.value)} °C a las ${hfmt(t.ts)}${t.by?' · por <b>'+nm(t.by)+'</b>':''}</div>`:''}${cal?`<div class="mut">Última calificación: ${calTxt(cal)}${cal.by?' · por <b>'+nm(cal.by)+'</b>':''}</div>`:''}</div><div class="acts"><button class="btn sm" onclick="goDryer(${c.dryer})">Abrir</button><button class="btn sm" onclick="openCiclo('${c.id}')">Detalle</button></div></div>`}).join(''):'<div class="mut">Ninguna secadora tiene carga en proceso.</div>';
+  /* filtros del historial */
+  const dryers=LAYOUT.flat().sort((a,b)=>dord(a)-dord(b));
+  const meses=[...new Set(db.ciclos.map(c=>(c.startDate||'').slice(0,7)).filter(Boolean))].sort().reverse();
+  if(histMes!=='all'&&!meses.includes(histMes))histMes='all';
+  $('hfDry').innerHTML='<option value="all">Todas las secadoras</option>'+dryers.map(n=>`<option value="${n}">${esc(dlabel(n))}</option>`).join('');$('hfDry').value=histDry;
+  $('hfMes').innerHTML='<option value="all">Todos los meses</option>'+meses.map(m=>{const [y,mm]=m.split('-').map(Number);return `<option value="${m}">${esc(cap(new Date(y,mm-1,1).toLocaleDateString('es-EC',{month:'long',year:'numeric'})))}</option>`}).join('');$('hfMes').value=histMes;
+  const hs=filteredCiclos();
+  $('resCiclos').innerHTML=hs.length?`<div class="mut" style="margin-bottom:4px">${hs.length} carga${hs.length===1?'':'s'}</div>`+hs.map(c=>{
+    const s=cycStats(c);
+    return `<div class="item"><div><b>${dlabel(c.dryer)}</b>: ${esc(c.tipo||'Sin tipo')} de ${esc(c.origin||'procedencia sin indicar')} ${stChip(c)}<div class="mut">Ingresó ${tfmt(c.startAt)}${c.by?' (por '+nm(c.by)+')':''}${c.dryAt?'. Seco en '+dur(c.dryAt-c.startAt)+(c.dryBy?' (marcado seco por '+nm(c.dryBy)+')':''):''}.</div><div class="mut">${fk(c.kgHumedo)} por secar${s.rend!=null?' → '+fk(s.kgS)+' secos ('+nf.format(s.rend)+' %)':''}.</div>${s.tm.length?`<div class="mut">${s.tm.length} temperatura${s.tm.length===1?'':'s'}: de ${fnum(s.tmin)} a ${fnum(s.tmax)} °C.</div>`:''}${s.cl.length?`<div class="mut">Calificación promedio: ${fnum(s.cavg)} ${s.cmax?' de '+s.cmax:''}.</div>`:''}${s.vt.length?`<div class="mut">${s.vt.length} volteo${s.vt.length===1?'':'s'}.</div>`:''}</div><div class="acts"><button class="btn sm primary" onclick="openCiclo('${c.id}')">Ver detalle</button>${isAdm?`<button class="btn sm red" onclick="delCicloId('${c.id}')">Eliminar</button>`:''}</div></div>`}).join(''):'<div class="mut">No hay cargas con ese filtro.</div>';
+  const gt=groupSum(db.entradas,e=>e.tipo||'Sin tipo',e=>e.kg);
+  $('resTipo').innerHTML=gt.length?'<table class="t"><tr><th>Tipo</th><th class="r">Toneladas secas</th></tr>'+gt.map(([o,k])=>`<tr><td>${esc(o)}</td><td class="r">${nf.format(r2(k/1000))}</td></tr>`).join('')+'</table>':EMP('box','Sin datos todavía','Se llenará cuando registres cacao en las secadoras.')
+}
+/* ---------- Descargas CSV ---------- */
+const cn=v=>v==null?'':String(v).replace('.',',');
+const fdt=ms=>ms?new Date(ms).toLocaleString('es-EC',{hour12:false}):'';
+function dlCSV(name,rows){
+  const txt='\ufeff'+rows.map(r=>r.map(v=>{v=v==null?'':String(v);return /[";\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(';')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv;charset=utf-8'}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)
+}
+function exportCiclos(){
+  const rows=[['Secadora','Tipo de cacao','Procedencia','Ingreso','Cacao por secar (kg)','Marcado seco','Descarga finalizada','Estado','Sacos secos','Kg secos','Rendimiento (%)','Temp. mínima (°C)','Temp. máxima (°C)','Temp. promedio (°C)','N.º de temperaturas','N.º de volteos','Calificación promedio']];
+  filteredCiclos().forEach(c=>{const s=cycStats(c);rows.push([dlabel(c.dryer),c.tipo,c.origin,fdt(c.startAt),cn(c.kgHumedo),fdt(c.dryAt),fdt(c.endAt),stLabel(c),s.sacos,cn(s.kgS),cn(s.rend),cn(s.tmin),cn(s.tmax),cn(s.tavg),s.tm.length,s.vt.length,cn(s.cavg)+(s.cl.length?' de '+s.cmax:'')])});
+  dlCSV('cargas_de_secado.csv',rows)
+}
+function exportEventos(){
+  const rows=[['Secadora','Tipo de cacao','Procedencia','Ingreso de la carga','Registro','Valor','Observación','Fecha y hora']];
+  filteredCiclos().forEach(c=>evsOf(c.id).forEach(e=>rows.push([dlabel(c.dryer),c.tipo,c.origin,fdt(c.startAt),e.type==='temp'?'Temperatura (°C)':e.type==='volteo'?'Volteo (min)':'Calificación (de '+calMaxOf(e)+')',cn(e.value),e.note||'',fdt(e.ts)])));
+  dlCSV('temperaturas_volteos_y_calificaciones.csv',rows)
+}
+function exportSacos(){
+  const rows=[['Fecha','Secadora','Tipo de cacao','Procedencia','Sacos','Kg','Kg por saco (prom.)','Forma de pesaje','Destinatario o lote','Código de lote']];
+  db.entradas.filter(e=>(histDry==='all'||String(e.dryer)===histDry)&&(histMes==='all'||e.date.startsWith(histMes))).sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>rows.push([e.date,dlabel(e.dryer),e.tipo||'',e.origin||'',e.sacks,cn(e.kg),cn(e.kgSaco!=null?r2(e.kgSaco):''),e.modo==='bas'?'Báscula':(e.modo==='saco'?'Otro peso por saco':'69,10 kg por saco'),lname(e.loteId),LI[e.loteId]?lcode(LI[e.loteId].l):'']));
+  dlCSV('sacos_secos.csv',rows)
+}
+
+/* ---------- Actividad (quién hizo qué) ---------- */
+let actUser='all';
+function setActUser(v){actUser=v;renderAct()}
+function renderAct(){
+  const L=[...(db.log||[])].sort((a,b)=>b.ts-a.ts),users=[...new Set(L.map(x=>x.by).filter(Boolean))].sort();
+  if(actUser!=='all'&&!users.includes(actUser))actUser='all';
+  $('actUser').innerHTML='<option value="all">Todos los usuarios</option>'+users.map(u=>`<option value="${esc(u)}">${esc(u)}</option>`).join('');$('actUser').value=actUser;
+  const l=L.filter(x=>actUser==='all'||x.by===actUser).slice(0,60);
+  $('resAct').innerHTML=l.length?l.map(x=>`<div class="item"><div><b>${esc(x.by||'—')}</b> ${esc(x.txt)}<div class="mut">${tfmt(x.ts)}</div></div></div>`).join(''):EMP('box','Aún no hay actividad','Aquí verás quién hizo cada movimiento.')
+}
+function exportAct(){
+  const rows=[['Fecha y hora','Usuario','Acción','Secadora']];
+  [...(db.log||[])].filter(x=>actUser==='all'||x.by===actUser).sort((a,b)=>b.ts-a.ts).forEach(x=>rows.push([fdt(x.ts),x.by||'',x.txt,x.dryer!=null?dlabel(x.dryer):'']));
+  dlCSV('actividad.csv',rows)
+}
+/* ---------- Despachos ---------- */
+function availFor(id){return r2(stockOf(id)+(editDisp&&editDisp.loteId===id?editDisp.kg:0))}
+function openDisp(loteId,editId){
+  editDisp=editId?db.despachos.find(x=>x.id===editId)||null:null;
+  const list=inStock(editDisp&&editDisp.loteId);
+  if(!list.length)return alert('No hay cacao en almacenamiento para despachar.');
+  $('dpT').textContent=editDisp?'Editar despacho':'Despachar cacao';$('dSave').textContent=editDisp?'Guardar cambios':'Despachar';
+  $('dl').innerHTML=(editDisp||loteId?'':'<option value="">Selecciona…</option>')+list.map(x=>`<option value="${x.l.id}">${esc(x.l.name)}</option>`).join('');
+  $('dl').value=editDisp?editDisp.loteId:(loteId||'');
+  $('dd').value=editDisp?editDisp.date:iso(new Date());
+  $('dn').value=editDisp?editDisp.note||'':'';
+  if(editDisp){$('du').value='kg';$('dq').value=editDisp.kg}else{$('du').value='t';$('dq').value=''}
+  $('dErr').textContent='';onDispLote();openM('dispM')
+}
+function onDispLote(){const id=$('dl').value;$('dAvail').textContent=id?'Disponible en almacén: '+fk(availFor(id))+' ('+ft(availFor(id))+')':'Elige el lote del que sale el cacao.';calcDisp()}
+function dispKg(){const q=Number($('dq').value)||0,u=$('du').value;return r2(u==='t'?q*1000:u==='s'?q*SACO:q)}
+function calcDisp(){const id=$('dl').value,kg=dispKg();$('dPrev').textContent=kg>0?'Se despachan '+fk(kg)+' ('+ft(kg)+', ≈ '+Math.round(kg/SACO)+' sacos)'+(id?'. Quedarían '+fk(availFor(id)-kg)+'.':'.'):'Ingresa la cantidad a despachar.'}
+function fillAll(){const id=$('dl').value;if(!id)return;$('du').value='kg';$('dq').value=availFor(id);calcDisp()}
+function saveDisp(){
+  const err=m=>{$('dErr').textContent=m};err('');
+  const date=$('dd').value,id=$('dl').value,kg=dispKg();
+  if(!date)return err('Selecciona la fecha.');
+  if(!id)return err('Elige el destinatario o lote.');
+  if(!(kg>0))return err('Ingresa la cantidad a despachar.');
+  if(kg>availFor(id)+0.005)return err('Solo hay '+fk(availFor(id))+' ('+ft(availFor(id))+') disponibles en ese lote.');
+  const data={date,loteId:id,kg,note:$('dn').value.trim()},_ed=!!editDisp;
+  if(_ed){data.by=editDisp.by||'';data.ts=editDisp.ts||0;data.upBy=myEmail;data.upTs=Date.now()}else{data.by=myEmail;data.ts=Date.now()}
+  col('sec_despachos').doc(editDisp?editDisp.id:nid()).set(data).catch(fail);
+  logAct((_ed?'editó un despacho de ':'despachó ')+fk(kg)+' del lote “'+lname(id)+'”'+(data.note?' ('+data.note+')':''));
+  editDisp=null;closeM('dispM')
+}
+function delDisp(id){
+  if(!isAdm)return alert('Solo el administrador puede eliminar despachos.');
+  const d=db.despachos.find(x=>x.id===id);if(!d)return;
+  if(confirm('¿Eliminar este despacho de '+fk(d.kg)+'? El cacao vuelve al almacenamiento.')){col('sec_despachos').doc(id).delete().catch(fail);logAct('eliminó un despacho de '+fk(d.kg)+' del lote “'+lname(d.loteId)+'”')}
+}
+
+document.addEventListener('focusin',e=>{if(e.target.matches&&e.target.matches('.sheet input,.sheet select'))setTimeout(()=>{try{e.target.scrollIntoView({block:'center',behavior:'smooth'})}catch(x){}},350)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['dryerM','dayM','dispM','cycM','metaM','fichaM','shareM','usersM'].forEach(id=>{if($(id).classList.contains('show'))closeModalById(id)})});
+['dryerM','dayM','dispM','cycM'].forEach(id=>$(id).addEventListener('click',e=>{if(e.target.id===id)closeM(id)}));
+$('rate').innerHTML=['1','2','3','4','5','6','7','8','9','C','0','⌫'].map(k=>`<button type="button" class="rt" aria-label="${k==='C'?'Borrar todo':k==='⌫'?'Borrar último dígito':k}" onclick="kp('${k}')">${k}</button>`).join('');
+setInterval(()=>{const c=$('nowClock');if(c)c.textContent=new Date().toLocaleTimeString('es-EC',{hour12:false})},1000);
+/* ---- cerrar ventanas: deslizar hacia abajo, tocar fuera y botón atrás ---- */
+function closeModalById(id,fromPop){if(id==='shareM'){if(shareUnsub)shareUnsub();shareUnsub=null}closeM(id,fromPop)}
+addEventListener('popstate',()=>{
+  if(skipPop>0){skipPop--;return}
+  const id=openStack[openStack.length-1];if(id)closeModalById(id,true)
+});
+function bindSwipe(modal,sheet){
+  let y0=0,dy=0,vel=0,ly=0,lt=0,drag=false,armed=false,sup=0,fromBack=false;
+  const HANDLE=64; /* zona alta de la ventana: siempre arrastrable */
+  function start(e,back){
+    if(e.touches.length!==1)return;
+    const t=e.touches[0];y0=ly=t.clientY;lt=Date.now();dy=0;vel=0;drag=false;fromBack=back;
+    const rel=t.clientY-sheet.getBoundingClientRect().top;
+    armed=back||sheet.scrollTop<=0||rel<=HANDLE
+  }
+  function move(e){
+    if(!armed||e.touches.length!==1)return;
+    const y=e.touches[0].clientY,d=y-y0,now=Date.now();
+    if(!drag){
+      if(d>4&&(fromBack||sheet.scrollTop<=0||y0-sheet.getBoundingClientRect().top<=HANDLE)){drag=true;sheet.style.animation='none';sheet.style.transition='none'}
+      else{if(d<-4)armed=false;return}
+    }
+    dy=Math.max(0,d);if(now>lt){vel=(y-ly)/(now-lt);ly=y;lt=now}
+    sheet.style.transform='translateY('+dy+'px)';
+    if(e.cancelable)e.preventDefault()
+  }
+  function end(){
+    armed=false;if(!drag)return;drag=false;sup=Date.now()+350;
+    const h=sheet.offsetHeight||400;
+    if(dy>Math.min(h*0.22,120)||(vel>0.45&&dy>20)){
+      sheet.style.transition='transform .2s ease-out';sheet.style.transform='translateY(110%)';
+      setTimeout(()=>{closeModalById(modal.id);sheet.style.transition='';sheet.style.transform='';sheet.style.animation=''},190)
+    }else{
+      sheet.style.transition='transform .2s ease-out';sheet.style.transform='';
+      setTimeout(()=>{sheet.style.transition='';sheet.style.animation=''},220)
+    }
+  }
+  sheet.addEventListener('touchstart',e=>start(e,false),{passive:true});
+  sheet.addEventListener('touchmove',move,{passive:false});
+  modal.addEventListener('touchstart',e=>{if(e.target===modal)start(e,true)},{passive:true});
+  modal.addEventListener('touchmove',e=>{if(e.target===modal||drag)move(e)},{passive:false});
+  sheet.addEventListener('touchend',end);sheet.addEventListener('touchcancel',end);
+  modal.addEventListener('touchend',end);modal.addEventListener('touchcancel',end);
+  sheet.addEventListener('click',e=>{if(Date.now()<sup){e.stopPropagation();e.preventDefault()}},true)
+}
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m&&Date.now()>=0)closeModalById(m.id)});
+  const sh=m.querySelector('.sheet');if(sh)bindSwipe(m,sh)
+});
+/* ====== Lotes y trazabilidad: código, ficha digital, QR y ficha física ====== */
+let PLAN={},codesTried=false,fichaId=null,fichaTab='res',fichaRO=false,fichaSaco=null;
+let PEND_SP=new URLSearchParams(location.search).get('e');
+let PEND=new URLSearchParams(location.search).get('lote'),PEND_SACO=new URLSearchParams(location.search).get('saco');
+const CODE_RE=()=>new RegExp('^'+LOTE_PREFIJO+'-(\\d{4})-(\\d+)$');
+const FT=[['res','Resumen'],['ori','Origen'],['pro','Proceso'],['cal','Calidad'],['mov','Movimientos'],['his','Historial'],['qr','QR']];
+function planCodes(){
+  const re=CODE_RE(),mx={},out={};
+  db.lotes.forEach(l=>{const m=re.exec(l.code||'');if(m)mx[m[1]]=Math.max(mx[m[1]]||0,+m[2])});
+  db.lotes.filter(l=>!l.code).sort((a,b)=>(a.created||'').localeCompare(b.created||'')||a.id.localeCompare(b.id)).forEach(l=>{
+    const y=(l.created||iso(new Date())).slice(0,4);mx[y]=(mx[y]||0)+1;out[l.id]=LOTE_PREFIJO+'-'+y+'-'+String(mx[y]).padStart(5,'0')});
+  return out
+}
+const lcode=l=>l.code||PLAN[l.id]||l.id;
+function nextCode(date){
+  const re=CODE_RE(),y=(date||iso(new Date())).slice(0,4);let m=0;
+  db.lotes.forEach(l=>{const r=re.exec(lcode(l));if(r&&r[1]===y)m=Math.max(m,+r[2])});
+  return LOTE_PREFIJO+'-'+y+'-'+String(m+1).padStart(5,'0')
+}
+function persistCodes(){
+  if(!canEdit()||!fdb)return;const ids=Object.keys(PLAN);if(!ids.length)return;
+  const b=fdb.batch();ids.forEach(id=>b.update(col('sec_lotes').doc(id),{code:PLAN[id]}));b.commit().catch(e=>console.warn('codigos',e))
+}
+function findLote(k){k=String(k||'').trim().toLowerCase();return db.lotes.find(l=>lcode(l).toLowerCase()===k||l.id.toLowerCase()===k)}
+function baseUrl(){
+  let u=APP_URL||'';try{u=u||localStorage.getItem('appUrl')||''}catch(e){}
+  if(u)return u;
+  const here=location.href.split(/[?#]/)[0];
+  return (/^https?:\/\//.test(here)&&!/^https?:\/\/(localhost|127\.|0\.0\.0\.0|192\.168\.|10\.)/.test(here))?here:''
+}
+function setAppUrl(){
+  const cur=baseUrl()||location.href.split(/[?#]/)[0];
+  const v=prompt('Dirección web donde está publicada la app (es la que abrirá el QR). Ejemplo: https://tudominio.com/secadoras/',cur);if(v===null)return false;
+  const s=v.trim();if(!/^https?:\/\/\S+$/i.test(s)){alert('Escribe una dirección completa que empiece con https://');return false}
+  try{localStorage.setItem('appUrl',s)}catch(e){}
+  if(fichaId&&$('fichaM').classList.contains('show'))renderFicha();return true
+}
+const ensureBase=()=>baseUrl()?true:setAppUrl();
+function loteUrl(l,saco){return (baseUrl()||location.href.split(/[?#]/)[0])+'?lote='+encodeURIComponent(lcode(l))+'&e='+encodeURIComponent(spaceUid||uid||'')+(saco?'&saco='+encodeURIComponent(saco):'')}
+function qrSvg(text,px){
+  if(typeof qrcode!=='function')return '<div class="mut" style="padding:20px">QR no disponible sin conexión a internet</div>';
+  try{const q=qrcode(0,'M');q.addData(text);q.make();const n=q.getModuleCount();let d='';
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+='M'+(c+3)+' '+(r+3)+'h1v1h-1z';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(n+6)+' '+(n+6)+'" width="'+px+'" height="'+px+'" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'
+  }catch(e){return '<div class="mut">No se pudo generar el QR</div>'}
+}
+function qrCheck(){
+  if(!(ready.sec_lotes&&ready.sec_entradas&&ready.sec_despachos&&ready.sec_ciclos&&ready.sec_eventos))return;
+  if(!codesTried){codesTried=true;persistCodes()}
+  if(PEND){
+    const k=PEND,s=PEND_SACO;PEND=null;PEND_SACO=null;
+    try{history.replaceState(history.state,'',location.href.split(/[?#]/)[0])}catch(e){}
+    const l=findLote(k);if(!l){toast('No se encontró el lote '+k,true);return}
+    setTab('res');openFicha(l.id,{consulta:true,saco:s});return
+  }
+  if(fichaId&&$('fichaM').classList.contains('show'))renderFicha()
+}
+const LOGO=(a,b)=>`<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 54C13 48 7 31 13 10c15 2 23 15 17 44z" fill="${a}"/><path d="M32 54C34 35 41 23 55 19c2 17-6 31-23 35z" fill="${b}"/></svg>`;
+const p2=n=>String(n).padStart(2,'0');
+const dmy=s=>s?s.split('-').reverse().join('/'):'—';
+const tsf=ms=>ms?new Date(ms).toLocaleString('es-EC',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',',' -'):'—';
+const uniq=a=>[...new Set(a.filter(Boolean))];
+function ubicTxt(l){return [l.bodega,l.zona,l.rack].filter(Boolean).join(' · ')||l.ubic||''}
+function origGroups(E){
+  const G={};
+  E.forEach(e=>{const c=e.cycleId?db.ciclos.find(y=>y.id===e.cycleId):null,pr=e.productor||(c&&c.productor)||'',fi=e.finca||(c&&c.finca)||'';
+    const k=e.cycleId||('d'+e.dryer+'|'+(e.origin||'')+'|'+pr+'|'+fi);
+    const g=G[k]||(G[k]={origin:e.origin||'',productor:pr,finca:fi,kg:0,sacks:0,date:e.date,dryer:e.dryer,tipo:e.tipo||''});
+    g.kg+=e.kg;g.sacks+=e.sacks;if(e.date<g.date)g.date=e.date});
+  return Object.values(G).sort((a,b)=>a.date.localeCompare(b.date)).map((g,i)=>({...g,kg:r2(g.kg),n:'OR-'+String(i+1).padStart(3,'0')}))
+}
+const origN=x=>origGroups(db.entradas.filter(e=>e.loteId===x.l.id)).length;
+function loteInfo(x){
+  const l=x.l,by=(a,b)=>a.date.localeCompare(b.date)||(a.ts||0)-(b.ts||0);
+  const E=db.entradas.filter(e=>e.loteId===l.id).sort(by),D=db.despachos.filter(d=>d.loteId===l.id).sort(by);
+  const cerrado=x.stock<=0.005&&x.ing>0,f=l.created||(E[0]&&E[0].date)||'',last=E.length?E[E.length-1].date:'';
+  const closeDate=cerrado&&D.length?D[D.length-1].date:'',ref=closeDate||iso(new Date());
+  const age=f?Math.max(0,Math.round((parse(ref)-parse(f))/864e5)):0;
+  const cyc=[...new Set(E.map(e=>e.cycleId).filter(Boolean))].map(id=>db.ciclos.find(c=>c.id===id)).filter(Boolean);
+  const T=[],K=[];cyc.forEach(c=>{evsOf(c.id,'temp').forEach(e=>{if(e.value!=null)T.push(e.value)});evsOf(c.id,'cal').forEach(e=>{if(e.value!=null)K.push(e.value)})});
+  let upd=l.upTs||l.ts||0,updBy=l.upBy||l.by||'';
+  [...E,...D].forEach(o=>{const t=o.upTs||o.ts||0;if(t>upd){upd=t;updBy=o.upBy||o.by||''}});
+  const OR=origGroups(E),sacks=E.reduce((a,e)=>a+e.sacks,0);
+  return {E,D,OR,cerrado,f,last,closeDate,age,cyc,T,K,upd,updBy,sacks,
+    sacksNow:Math.max(0,Math.round(x.stock/SACO)),avgSaco:sacks?r2(x.ing/sacks):0,
+    productores:uniq(OR.map(g=>g.productor)),fincas:uniq(OR.map(g=>g.finca)),cantones:uniq(OR.map(g=>g.origin)),tipos:uniq(E.map(e=>e.tipo)),
+    ver:1+E.length+D.length+(l.rev||0),
+    tAvg:T.length?r2(sum(T,v=>v)/T.length):null,kAvg:K.length?r2(sum(K,v=>v)/K.length):null}
+}
+function openFicha(id,o){
+  o=o||{};if(!LI[id])return;
+  fichaId=id;fichaTab=o.tab||'res';fichaRO=!!o.consulta||!canEdit();fichaSaco=o.saco||null;
+  renderFicha();openM('fichaM');$('fichaM').querySelector('.sheet').scrollTop=0
+}
+function setFTab(t){fichaTab=t;renderFicha();$('fichaM').querySelector('.sheet').scrollTop=0}
+function renderFicha(){
+  const x=LI[fichaId];if(!x){closeM('fichaM');return}
+  const l=x.l,I=loteInfo(x),code=lcode(l);
+  let h=`<div class="fhead">${LOGO('#fff','#a9d97f')}<div><b>${esc(PLANTA_NOMBRE)}</b><span>${esc(PLANTA_LEMA)}</span></div></div>`;
+  h+=fichaTab==='res'?'<div class="fbar">FICHA COMPLETA DEL LOTE</div>':'<button type="button" class="btn sm" style="margin-bottom:8px" onclick="setFTab(\'res\')">← Ficha del lote</button>';
+  if(fichaSaco)h+=`<div class="fsaco">Saco <b>${esc(fichaSaco)}</b>: pertenece al lote <b>${esc(code)}</b>. Aquí ves de dónde viene su cacao.</div>`;
+  if(fichaRO)h+='<div class="mut" style="margin-bottom:8px">Modo consulta: solo lectura.</div>';
+  h+=fichaBody(x,I,code);
+  h+=`<div class="ma"><button class="btn primary" onclick="printFicha('${l.id}')">Imprimir ficha</button>`+(fichaRO?'':`<button class="btn" onclick="editMeta('${l.id}')">Editar datos</button>`)+'<button class="btn" onclick="closeM(\'fichaM\')">Cerrar</button></div>';
+  $('fiB').innerHTML=h
+}
+function fichaBody(x,I,code){
+  const l=x.l,kv=(v,t)=>`<div><b>${v}</b><span>${t}</span></div>`,k3=(t,v)=>`<div><span>${t}</span><b>${v}</b></div>`;
+  const st=`<span class="fst ${I.cerrado?'c':''}">${I.cerrado?'CERRADO':'ALMACENADO'}</span>`;
+  const rows=g=>g.map(r=>`<tr><td>${r.n}</td><td>${esc(r.origin||'—')}</td><td>${esc(r.productor||'—')} / ${esc(r.finca||'—')}</td><td class="r">${nf.format(r.kg)}</td></tr>`).join('');
+  const head='<tr><th>N°</th><th>Origen</th><th>Productor / Finca</th><th class="r">Peso (kg)</th></tr>';
+  const foot=`<div class="ffoot"><span><b>${esc(PLANTA_NOMBRE)}</b><br>${esc(PLANTA_SUB)}</span><span style="text-align:right">Versión de ficha: ${p2(I.ver)}<br>Actualizado: ${tsf(I.upd)}</span></div>`;
+  const T=(t)=>`<h3 class="fsec">${t}</h3>`;
+  if(fichaTab==='res'){
+    const SEC=[['ori','Información de origen','Productores, fincas y cantones.'],['pro','Proceso de secado','Secadoras, temperaturas y volteos.'],['mov','Movimientos del lote','Ingresos, despachos y saldo.'],['cal','Control de calidad','Humedad, tipo y calificaciones.'],['tra','Trazabilidad completa','Lote anterior, historial y responsables.'],['qr','QR y etiquetas','QR del lote y de cada saco.']];
+    return `<div class="fcard"><div class="fcode"><b>${esc(code)}</b>${st}</div><div class="fgrid3">${k3('Peso actual',fk(x.stock))}${k3('Inicio de formación',dmy(I.f))}${k3('Días en lote',I.age+' días')}</div></div>`+
+      `<div class="fcard fcmp"><div><b>Composición del lote</b><div class="mut">${p2(I.OR.length)} Orígenes · ${I.fincas.length?p2(I.fincas.length):'—'} Fincas · ${fk(x.ing)}</div></div><button class="btn leaf sm" onclick="setFTab('ori')">Ver detalle completo</button></div>`+
+      `<div class="fcard"><b>Orígenes / Destinos de cacao</b>${I.OR.length?'<table class="t">'+head+rows(I.OR.slice(0,6))+'</table>':'<div class="mut">Sin ingresos todavía.</div>'}${I.OR.length>6?`<button type="button" class="flink" onclick="setFTab('ori')">Ver todos los orígenes (${I.OR.length}) ›</button>`:''}</div>`+
+      SEC.map(([k,t,d])=>`<button type="button" class="frow" onclick="setFTab('${k}')"><span><b>${t}</b><small>${d}</small></span><i></i></button>`).join('')+foot
+  }
+  if(fichaTab==='ori')
+    return T('Información de origen')+'<div class="fgrid">'+kv(I.productores.length?p2(I.productores.length):'—','Productores')+kv(I.fincas.length?p2(I.fincas.length):'—','Fincas')+kv(esc(I.cantones.join(' / ')||'—'),'Cantones / procedencias')+kv(p2(I.OR.length),'Orígenes')+'</div>'+
+      (I.OR.length?'<div class="fcard"><table class="t">'+head+rows(I.OR)+'</table></div>'+I.OR.map(g=>`<div class="item"><div><b>${g.n}</b> · ${esc(fshort(g.date))}<div class="mut">${esc(g.tipo?g.tipo+' de ':'')}${esc(g.origin||'procedencia sin indicar')}</div><div class="mut">${dlabel(g.dryer)} · ${g.sacks} sacos · ${fk(g.kg)}</div></div></div>`).join(''):'<div class="mut">Este lote aún no tiene ingresos.</div>');
+  if(fichaTab==='pro'){const d=loteDetail(x);return T('Proceso de secado')+(d?d.replace('<details','<details open'):'<div class="mut">Sin datos de proceso.</div>')}
+  if(fichaTab==='cal')
+    return T('Control de calidad')+'<div class="fgrid">'+kv(l.hum!=null&&l.hum!==''?fnum(l.hum)+' %':'—','Humedad')+kv(esc(I.tipos.join(' / ')||'Cacao seco'),'Tipo')+kv('Secado','Proceso')+kv(I.tAvg!=null?fnum(I.tAvg)+' °C':'—','Temperatura promedio')+kv(I.kAvg!=null?fnum(I.kAvg):'—','Calificación promedio')+'</div>'+
+      I.cyc.map(c=>{const T=evsOf(c.id,'temp').map(e=>e.value).filter(v=>v!=null),V=evsOf(c.id,'volteo'),K=evsOf(c.id,'cal').map(e=>e.value).filter(v=>v!=null);
+        return `<div class="item"><div><b>${dlabel(c.dryer)}</b> · ${esc(c.tipo||'Sin tipo')}<div class="mut">${esc(c.origin||'procedencia sin indicar')}${c.dryAt?' · secó en '+dur(c.dryAt-c.startAt):''}</div><div class="mut">${T.length?'Temp. prom. '+fnum(r2(sum(T,v=>v)/T.length))+' °C':'Sin temperaturas'} · ${V.length} volteo${V.length===1?'':'s'}${K.length?' · calificación '+fnum(r2(sum(K,v=>v)/K.length)):''}</div></div></div>`}).join('')
+  if(fichaTab==='mov'){
+    const rr=[...I.E.map((e,i)=>({d:e.date,t:e.ts||0,kg:e.kg,txt:(i===0?'Creación del lote · ':'Incorporación · ')+dlabel(e.dryer)+' · '+e.sacks+' sacos',o:e})),
+      ...I.D.map(d=>({d:d.date,t:d.ts||0,kg:-d.kg,txt:'Despacho'+(d.note?' · '+d.note:''),o:d}))].sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t);
+    let bal=0;if(!rr.length)return T('Movimientos del lote')+'<div class="mut">Sin movimientos.</div>';
+    return T('Movimientos del lote')+rr.map(r=>{bal=r2(bal+r.kg);return `<div class="fmov"><div><b>${esc(fshort(r.d))}</b> · ${esc(r.txt)}<div class="mut">${r.o.by?'Por '+nm(r.o.by):'Autor no registrado'}${r.o.ts?' · '+tfmt(r.o.ts):''}</div></div><div class="kg ${r.kg>=0?'in':'out'}">${r.kg>=0?'+':'−'}${fk(Math.abs(r.kg))}</div><div class="bal">Saldo ${fk(bal)}</div></div>`}).join('')
+  }
+  if(fichaTab==='tra'){
+    const L=db.log.filter(g=>g.txt&&(g.txt.includes('“'+l.name+'”')||g.txt.includes('para '+l.name)||g.txt.includes(code)));
+    return T('Trazabilidad completa')+'<div class="fgrid">'+kv(esc(l.prev||'—'),'Lote anterior')+kv(tsf(I.upd),'Último movimiento')+kv(I.updBy?nm(I.updBy):'—','Último usuario')+kv(l.by?nm(l.by):'—','Creado por')+kv(esc(ubicTxt(l)||'Sin indicar'),'Ubicación')+kv('v'+p2(I.ver),'Versión de ficha')+'</div>'+
+      '<b>Historial de actividad</b>'+(L.length?L.map(g=>`<div class="item"><div>${esc(g.txt)}<div class="mut">${g.by?nm(g.by):'—'} · ${tfmt(g.ts)}</div></div></div>`).join(''):'<div class="mut">No hay actividad registrada para este lote.</div>')
+  }
+  const u=loteUrl(l);
+  const nb=!baseUrl();
+  return T('QR y etiquetas')+`<div style="text-align:center"><div class="qrbox">${qrSvg(u,220)}</div><div class="mut" style="word-break:break-all">${esc(u)}</div>${nb?'<div class="fsaco" style="margin-top:8px">Esta dirección solo funciona en este equipo. Configura la dirección web donde está publicada la app para que el QR abra la ficha desde cualquier teléfono.</div>':''}<div class="mut" style="margin-top:6px">Al escanearlo se abre esta ficha en modo consulta (hay que iniciar sesión).</div><div class="ma" style="justify-content:center"><button class="btn" onclick="printSacos('${l.id}')">Etiquetas QR de sacos</button><button class="btn" onclick="setAppUrl()">Dirección de la app</button></div></div>`
+}
+let metaId=null;
+function editMeta(id){
+  const l=db.lotes.find(x=>x.id===id);if(!l||!canEdit())return;metaId=id;
+  $('mtSub').textContent=lcode(l)+' · '+l.name;$('mtErr').textContent='';
+  $('mtB').value=l.bodega||l.ubic||'';$('mtZ').value=l.zona||'';$('mtR').value=l.rack||'';$('mtH').value=l.hum!=null&&l.hum!==''?fnum(l.hum):'';$('mtP').value=l.prev||'';
+  openM('metaM')
+}
+function saveMeta(){
+  const l=db.lotes.find(x=>x.id===metaId);if(!l)return;
+  const hs=$('mtH').value.trim(),h=hs?num(hs):'';
+  if(hs&&!(h>=0&&h<=100))return $('mtErr').textContent='La humedad debe estar entre 0 y 100 %.';
+  col('sec_lotes').doc(metaId).update({bodega:$('mtB').value.trim(),zona:$('mtZ').value.trim(),rack:$('mtR').value.trim(),hum:h,prev:$('mtP').value.trim(),ubic:'',rev:(l.rev||0)+1,upBy:myEmail,upTs:Date.now()}).catch(fail);
+  logAct('actualizó los datos del lote “'+l.name+'” ('+lcode(l)+')');closeM('metaM')
+}
+const C128=["212222","222122","222221","121223","121322","131222","122213","122312","132212","221213","221312","231212","112232","122132","122231","113222","123122","123221","223211","221132","221231","213212","223112","312131","311222","321122","321221","312212","322112","322211","212123","212321","232121","111323","131123","131321","112313","132113","132311","211313","231113","231311","112133","112331","132131","113123","113321","133121","313121","211331","231131","213113","213311","213131","311123","311321","331121","312113","312311","332111","314111","221411","431111","111224","111422","121124","121421","141122","141221","112214","112412","122114","122411","142112","142211","241211","221114","413111","241112","134111","111242","121142","121241","114212","124112","124211","411212","421112","421211","212141","214121","412121","111143","111341","131141","114113","114311","411113","411311","113141","114131","311141","411131","211412","211214","211232","2331112"];
+function code128(txt){
+  const v=[104];String(txt).split('').forEach(ch=>{const c=ch.charCodeAt(0)-32;if(c>=0&&c<=95)v.push(c)});
+  let s=104;v.slice(1).forEach((c,i)=>s+=c*(i+1));v.push(s%103,106);
+  let x=10,b='';v.forEach(c=>{const p=C128[c];for(let i=0;i<p.length;i++){const w=+p[i];if(i%2===0)b+='<rect x="'+x+'" width="'+w+'" height="1"/>';x+=w}});
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(x+10)+' 1" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" width="'+(x+10)+'" height="1" fill="#fff"/><g fill="#000">'+b+'</g></svg>'
+}
+function runPrint(size){
+  const html=$('printArea').innerHTML;$('printArea').innerHTML='';
+  let css='';try{[...document.styleSheets].forEach(ss=>{try{[...ss.cssRules].forEach(r=>{if(r.selectorText&&/^\.(pf|pl)/.test(r.selectorText))css+=r.cssText+'\n'})}catch(e){}})}catch(e){}
+  const old=$('prFrame');if(old)old.remove();
+  toast('Preparando la impresión…');
+  const doc='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>'+(size==='A4'?'Etiquetas de sacos':'Ficha de lote')+'</title><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"><style>@page{size:'+size+';margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff}'+css+'</style></head><body>'+html+'</body></html>';
+  const f=document.createElement('iframe');f.id='prFrame';f.setAttribute('aria-hidden','true');
+  f.style.cssText='position:fixed;left:0;top:0;width:210mm;height:'+(size==='A4'?'297mm':'148mm')+';border:0;opacity:0;pointer-events:none;z-index:-1';
+  f.onload=()=>{const w=f.contentWindow;if(!w||!w.document.querySelector('.pfc,.plb')||f.dataset.done)return;f.dataset.done='1';
+    const fr=(w.document.fonts&&w.document.fonts.ready)?Promise.race([w.document.fonts.ready,new Promise(r=>setTimeout(r,3000))]):Promise.resolve();
+    fr.then(()=>setTimeout(()=>{try{w.focus();w.print()}catch(e){toast('Este dispositivo no permite imprimir desde la app',true)}},150))};
+  f.srcdoc=doc;document.body.appendChild(f)
+}
+addEventListener('afterprint',()=>{document.body.classList.remove('pf');const p=$('printArea');if(p)p.innerHTML='';const s=$('pgStyle');if(s)s.remove()});
+function printFicha(id){
+  if(!ensureBase())return;const x=LI[id];if(!x)return;const l=x.l,I=loteInfo(x),code=lcode(l),u=loteUrl(l);
+  const R=(t,v)=>`<p><span>${t}</span><b>${v}</b></p>`;
+  const pesoIni=fk(x.ing);
+  $('printArea').innerHTML=`<div class="pfc"><div class="pfh">${LOGO('#fff','#a9d97f')}<div class="pfh-b"><b>${esc(PLANTA_NOMBRE)}</b><i>${esc(PLANTA_LEMA)}</i></div><div class="pfh-m">PLANTA DE SECADO<br>FICHA DE IDENTIFICACIÓN DE LOTE</div><div class="pfh-t">TRAZABILIDAD<br>CALIDAD<br>SOSTENIBILIDAD</div></div>
+<div class="pfb"><div class="pfb-l"><small>N° DE LOTE</small><div class="pf-code">${esc(code)}</div><span class="pf-st ${I.cerrado?'c':''}">ESTADO: ${I.cerrado?'CERRADO':'ALMACENADO'}</span></div><div class="pfb-q">${qrSvg(u,160)}<small>Escanea el QR para ver la ficha completa del lote</small></div></div>
+<div class="pfr"><div><h4>Producto</h4><span class="one">${esc(l.producto||'Cacao seco')}</span></div>
+<div><h4>Composición del lote</h4><span class="one" style="font-size:3.7mm">${p2(I.OR.length)} Orígenes · ${I.fincas.length?p2(I.fincas.length):'—'} Fincas · ${pesoIni}</span><span class="sm">Detalle completo en el QR</span></div>
+<div><h4>Calidad</h4>${R('Humedad:',l.hum!=null&&l.hum!==''?fnum(l.hum)+' %':'—')}${R('Tipo:',esc(I.tipos.join(' / ')||'Cacao seco'))}${R('Proceso:','Secado')}</div></div>
+<div class="pfr"><div><h4>Origen</h4>${R('Productores:',I.productores.length?p2(I.productores.length):'—')}${R('Fincas:',I.fincas.length?p2(I.fincas.length):'—')}${R('Cantones:',esc(I.cantones.slice(0,3).join(' / ')||'—'))}</div>
+<div><h4>Fechas</h4>${R('Inicio de formación:',dmy(I.f))}${R('Última incorporación:',dmy(I.last))}${R('Fecha de cierre:',dmy(I.closeDate))}${R('Días en lote:',I.age+' días')}</div>
+<div><h4>Ubicación</h4>${R('Bodega:',esc(l.bodega||l.ubic||'—'))}${R('Zona:',esc(l.zona||'—'))}${R('Rack / Posición:',esc(l.rack||'—'))}</div></div>
+<div class="pfr" style="border-bottom:0"><div><h4>Cantidad</h4>${R('Peso inicial:',pesoIni)}${R('Peso actual:',fk(x.stock))}${R('Sacos:',I.sacks)}${R('Peso prom. / saco:',I.avgSaco?fk(I.avgSaco):'—')}</div>
+<div><h4>Contabilidad y trazabilidad</h4>${R('Lote anterior:',esc(l.prev||'—'))}${R('Último movimiento:',tsf(I.upd))}${R('Último usuario:',I.updBy?nm(I.updBy):'—')}</div>
+<div class="pf-bc">${code128(code)}<div>${esc(code)}</div></div></div>
+<div class="pf-f"><span><b>${esc(PLANTA_NOMBRE)}</b> | ${esc(PLANTA_SUB)}</span><span>Versión de ficha: ${p2(I.ver)} | Actualizado: ${tsf(I.upd)}</span></div></div>`;
+  logAct('imprimió la ficha del lote “'+l.name+'” ('+code+')');runPrint('210mm 148mm')
+}
+function printSacos(id){
+  if(!ensureBase())return;const x=LI[id];if(!x)return;const l=x.l,code=lcode(l);let n=Math.max(1,Math.round(x.stock/SACO));
+  const r=prompt('¿Cuántas etiquetas de saco imprimir? (una por saco, 10 por hoja A4)',n);if(r===null)return;
+  n=Math.round(Number(r));if(!(n>=1&&n<=500))return alert('Escribe un número entre 1 y 500.');
+  const w=n>99?3:2;let h='<div class="plb">';
+  for(let i=1;i<=n;i++){const s='S'+String(i).padStart(w,'0');
+    h+=`<div class="pl">${qrSvg(loteUrl(l,s),140)}<div class="pl-t"><small>LOTE</small><b>${esc(code)}</b><div class="pl-s">${esc(s)}</div><span>${esc(l.name)}</span>${l.created?'<span>Formación: '+esc(fshort(l.created))+'</span>':''}</div></div>`}
+  $('printArea').innerHTML=h+'</div>';logAct('imprimió '+n+' etiquetas de saco del lote “'+l.name+'” ('+code+')');runPrint('A4')
+}
+
+applyTheme();decorate();initFirebase();render();
+</script>
+</body></html>
