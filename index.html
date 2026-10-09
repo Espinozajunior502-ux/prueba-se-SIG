@@ -756,7 +756,7 @@ function toggleMenu(e){e.stopPropagation();const p=$('menuPanel'),o=p.hidden;p.h
 document.addEventListener('click',e=>{const p=$('menuPanel');if(p&&!p.hidden&&!p.contains(e.target))closeMenu()});
 document.getElementById('menuPanel').addEventListener('click',e=>{if(e.target.closest('button'))closeMenu()});
 let lastY=0;addEventListener('scroll',()=>{const y=Math.max(0,scrollY);if(Math.abs(y-lastY)<8)return;const n=document.querySelector('nav.tabs');if(n)n.classList.toggle('hide',y>lastY&&y>80);lastY=y},{passive:true});
-const APP_VER='1.10.0';
+const APP_VER='1.11.0';
 let updShown=false;
 async function checkUpdate(){if(updShown||!navigator.onLine)return;try{const r=await fetch(location.pathname+location.search,{cache:'no-store'});if(!r.ok)return;const m=(await r.text()).match(/APP_VER='([^']+)'/);if(m&&m[1]!==APP_VER){updShown=true;const ae=document.activeElement;if(!document.querySelector('.modal.show')&&!(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName))){location.reload();return}const b=document.createElement('div');b.id='updBar';b.innerHTML='<span>Hay una versión nueva de la app</span><button class="btn primary" onclick="location.reload()">Actualizar</button>';document.body.appendChild(b)}}catch(e){}}
 setInterval(checkUpdate,10*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});setTimeout(checkUpdate,8000);let loadT0=0,loadT=null;
@@ -928,7 +928,7 @@ const num=v=>Number(String(v).replace(',','.'));
 const fnum=v=>String(v).replace('.',',');
 function evWho(e){return '<div class="who">'+(e.by?'👤 Por <b>'+nm(e.by)+'</b>':'👤 Autor no registrado')+'</div>'}
 let NM={};const openL=new Set();let FULL=false,prodM='w';
-function nm(e){e=e||'';return esc(NM[e.toLowerCase()]||e)}
+function nm(e){e=e||'';const n=NM[e.toLowerCase()];return esc(n||(PUBGEN?'Personal de planta':e))}
 function setNombre(email){const k=email.toLowerCase(),n=prompt('Nombre que se mostrará en lugar de '+email+' (vacío para quitarlo):',NM[k]||'');if(n===null)return;const id=encodeURIComponent(k),r=n.trim()?col('sec_nombres').doc(id).set({email:k,name:n.trim()}):col('sec_nombres').doc(id).delete();r.then(()=>{toast('Nombre guardado');openUsers()}).catch(fail)}
 function setProd(m){prodM=m;renderProd()}
 function renderProd(){
@@ -1629,10 +1629,10 @@ function fichaBody(x,I,code){
   const T=(t)=>`<h3 class="fsec">${t}</h3>`;
   if(fichaTab==='res'){
     const SEC=[['ori','Información de origen','Productores, fincas y cantones.'],['pro','Proceso de secado','Secadoras, temperaturas y volteos.'],['mov','Movimientos del lote','Ingresos, despachos y saldo.'],['cal','Control de calidad','Humedad, tipo y calificaciones.'],['tra','Trazabilidad completa','Lote anterior, historial y responsables.'],['qr','QR y etiquetas','QR del lote y de cada saco.']];
-    return `<div class="fcard"><div class="fcode"><b>${esc(code)}</b>${st}</div><div class="fgrid3">${k3('Peso actual',fk(x.stock))}${k3('Inicio de formación',dmy(I.f))}${k3('Días en lote',I.age+' días')}</div></div>`+
-      `<div class="fcard fcmp"><div><b>Composición del lote</b><div class="mut">${p2(I.OR.length)} Orígenes · ${I.fincas.length?p2(I.fincas.length):'—'} Fincas · ${fk(x.ing)}</div></div><button class="btn leaf sm" onclick="setFTab('ori')">Ver detalle completo</button></div>`+
-      `<div class="fcard"><b>Orígenes / Destinos de cacao</b>${I.OR.length?'<table class="t">'+head+rows(I.OR.slice(0,6))+'</table>':'<div class="mut">Sin ingresos todavía.</div>'}${I.OR.length>6?`<button type="button" class="flink" onclick="setFTab('ori')">Ver todos los orígenes (${I.OR.length}) ›</button>`:''}</div>`+
-      SEC.map(([k,t,d])=>`<button type="button" class="frow" onclick="setFTab('${k}')"><span><b>${t}</b><small>${d}</small></span><i></i></button>`).join('')+foot
+    return `<div class="fcard"><div class="fcode"><b>${esc(code)}</b>${st}</div><div class="fgrid3">${k3('Peso actual',fk(x.stock))}${k3('Inicio de formación',dmy(I.f))}${k3('Días en lote',PUBGEN?`<i class="pdays" style="font-style:normal" data-f="${esc(I.f)}" data-c="${esc(I.closeDate)}"></i>`:I.age+' días')}</div></div>`+
+      `<div class="fcard fcmp"><div><b>Composición del lote</b><div class="mut">${p2(I.OR.length)} Orígenes · ${I.fincas.length?p2(I.fincas.length):'—'} Fincas · ${fk(x.ing)}</div></div><button class="btn leaf sm" ${NAV('ori')}>Ver detalle completo</button></div>`+
+      `<div class="fcard"><b>Orígenes / Destinos de cacao</b>${I.OR.length?'<table class="t">'+head+rows(I.OR.slice(0,6))+'</table>':'<div class="mut">Sin ingresos todavía.</div>'}${I.OR.length>6?`<button type="button" class="flink" ${NAV('ori')}>Ver todos los orígenes (${I.OR.length}) ›</button>`:''}</div>`+
+      SEC.filter(r=>!(PUBGEN&&r[0]==='qr')).map(([k,t,d])=>`<button type="button" class="frow" ${NAV(k)}><span><b>${t}</b><small>${d}</small></span><i></i></button>`).join('')+foot
   }
   if(fichaTab==='ori')
     return T('Información de origen')+'<div class="fgrid">'+kv(I.productores.length?p2(I.productores.length):'—','Productores')+kv(I.fincas.length?p2(I.fincas.length):'—','Fincas')+kv(esc(I.cantones.join(' / ')||'—'),'Cantones / procedencias')+kv(p2(I.OR.length),'Orígenes')+'</div>'+
@@ -1659,7 +1659,7 @@ function fichaBody(x,I,code){
     return T('QR y etiquetas')+(PUBERR[l.id]?`<div class="fsaco">No se pudo publicar la ficha pública. ${RULES_HINT}</div><div class="ma"><button class="btn" onclick="PUBTRY['${l.id}']=0;PUBERR['${l.id}']=0;renderFicha()">Reintentar</button></div>`:canEdit()?'<div class="mut">Publicando la ficha pública…</div>':'<div class="mut">Un editor debe generar primero el QR de este lote.</div>')
   }
   const u=loteUrl(l),nb=!baseUrl();
-  return T('QR y etiquetas')+`<div style="text-align:center"><div class="qrbox">${qrSvg(u,220)}</div><div class="mut" style="word-break:break-all">${esc(u)}</div>${nb?'<div class="fsaco" style="margin-top:8px">Esta dirección solo funciona en este equipo. Configura la dirección web donde está publicada la app para que el QR abra la ficha desde cualquier teléfono.</div>':''}<div class="mut" style="margin:6px 0">Quien escanee este QR ve la ficha de seguimiento del lote sin iniciar sesión ni entrar al sistema. No muestra usuarios, calificaciones${PUB_PRODUCTOR?'':', productores, fincas'}${PUB_UBICACION?'':' ni ubicación'}.</div><div class="ma" style="justify-content:center"><button class="btn" onclick="window.open('${u}','_blank')">Ver ficha pública</button><button class="btn" onclick="printSacos('${l.id}')">Etiquetas QR de sacos</button><button class="btn" onclick="setAppUrl()">Dirección de la app</button></div></div>`
+  return T('QR y etiquetas')+`<div style="text-align:center"><div class="qrbox">${qrSvg(u,220)}</div><div class="mut" style="word-break:break-all">${esc(u)}</div>${nb?'<div class="fsaco" style="margin-top:8px">Esta dirección solo funciona en este equipo. Configura la dirección web donde está publicada la app para que el QR abra la ficha desde cualquier teléfono.</div>':''}<div class="mut" style="margin:6px 0">Quien escanee este QR ve la ficha completa del lote en solo lectura, con todas sus secciones, sin iniciar sesión ni entrar al sistema. Los usuarios sin nombre configurado aparecen como «Personal de planta».</div><div class="ma" style="justify-content:center"><button class="btn" onclick="window.open('${u}','_blank')">Ver ficha pública</button><button class="btn" onclick="printSacos('${l.id}')">Etiquetas QR de sacos</button><button class="btn" onclick="setAppUrl()">Dirección de la app</button></div></div>`
 }
 let metaId=null;
 function editMeta(id){
@@ -1724,27 +1724,31 @@ async function printSacos(id){
   $('printArea').innerHTML=h+'</div>';logAct('imprimió '+n+' etiquetas de saco del lote “'+l.name+'” ('+code+')');runPrint('A4')
 }
 
-/* ====== Ficha pública (sin iniciar sesión) ====== */
-const PUB_PRODUCTOR=false,PUB_UBICACION=false; /* true = mostrar productor/finca o ubicación en la ficha pública */
+/* ====== Ficha pública (sin iniciar sesión): misma ficha completa en solo lectura ====== */
 const PUBF=new URLSearchParams(location.search).get('f'),PUBS=new URLSearchParams(location.search).get('saco');
 const RULES_HINT='Revisa tu conexión y que las reglas de Firestore permitan la colección fichas_publicas.';
-let PUBTOK={},PUBTRY={},PUBERR={},PUBBUSY={},PUBFAIL=false,pubT=null;
+let PUBTOK={},PUBTRY={},PUBERR={},PUBBUSY={},PUBFAIL=false,pubT=null,pubRe=null,PUBGEN=false,PUBD=null,PUBTAB='res',PUBLAST={};
+const NAV=k=>PUBGEN?`data-ft="${k}"`:`onclick="setFTab('${k}')"`;
 const hash=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)};
 const newToken=()=>{const a=new Uint8Array(16);crypto.getRandomValues(a);return [...a].map(b=>b.toString(16).padStart(2,'0')).join('')};
 const pubTok=l=>l.pub||PUBTOK[l.id]||'';
 function pubPayload(x){
-  const l=x.l,I=loteInfo(x),tot=x.ing||1,og={};
-  I.OR.forEach(g=>{const k=(g.origin||'Sin indicar')+(PUB_PRODUCTOR?'|'+g.productor+'|'+g.finca:'');const o=og[k]||(og[k]={o:g.origin||'Sin indicar',kg:0,p:PUB_PRODUCTOR?g.productor:'',f:PUB_PRODUCTOR?g.finca:''});o.kg+=g.kg});
-  const orig=Object.values(og).map(o=>({...o,kg:r2(o.kg),pc:Math.round(o.kg/tot*100)})).sort((a,b)=>b.kg-a.kg);
-  const rr=[...I.E.map((e,i)=>({d:e.date,t:e.ts||0,kg:e.kg,k:i===0?'Creación del lote':'Incorporación'})),...I.D.map(d=>({d:d.date,t:d.ts||0,kg:-d.kg,k:'Despacho'}))].sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t);
-  let bal=0;const mov=rr.map(r=>{bal=r2(bal+r.kg);return {d:r.d,k:r.k,kg:r.kg,b:bal}});
-  return {code:lcode(l),name:l.name,producto:l.producto||'Cacao seco',cerrado:I.cerrado,peso:x.stock,ing:x.ing,desp:x.desp,sacos:I.sacks,f:I.f,last:I.last,cierre:I.closeDate,orig,mov,hum:(l.hum!=null&&l.hum!==''?l.hum:null),tipos:I.tipos,ubic:PUB_UBICACION?ubicTxt(l):'',ver:I.ver,upd:I.upd}
+  const I=loteInfo(x),code=lcode(x.l),sv=fichaTab,S={};
+  PUBGEN=true;
+  try{['res','ori','pro','cal','mov','tra'].forEach(k=>{fichaTab=k;S[k]=fichaBody(x,I,code)})}finally{PUBGEN=false;fichaTab=sv}
+  return {code,name:x.l.name,cerrado:I.cerrado,ver:I.ver,upd:I.upd,s:S}
+}
+function pubJson(x){
+  let j=JSON.stringify(pubPayload(x));
+  if(j.length>900000){const d=JSON.parse(j);d.s.pro='<div class="mut">El detalle de proceso es demasiado extenso para la ficha pública.</div>';j=JSON.stringify(d)}
+  return j
 }
 async function publishLote(l,force){
   const x=LI[l.id];if(!x||!fdb)return false;
   let tok=pubTok(l);const isNew=!tok;if(isNew){tok=newToken();PUBTOK[l.id]=tok}
-  const json=JSON.stringify(pubPayload(x)),h=hash(json);
+  const json=pubJson(x),h=hash(json);
   if(!isNew&&!force&&l.pubH===h)return true;
+  PUBLAST[l.id]=Date.now();
   const b=fdb.batch();
   b.set(fdb.collection('fichas_publicas').doc(tok),{space:spaceUid||uid,json,upd:Date.now()});
   b.update(col('sec_lotes').doc(l.id),{pub:tok,pubH:h});
@@ -1760,34 +1764,43 @@ async function ensurePublished(l){
 function autoPub(){
   if(!canEdit()||!fdb||PUBFAIL)return;clearTimeout(pubT);
   pubT=setTimeout(async()=>{
+    let again=false;
     for(const l of db.lotes){if(!l.pub||PUBBUSY[l.id])continue;const x=LI[l.id];if(!x)continue;
-      if(l.pubH!==hash(JSON.stringify(pubPayload(x)))){PUBBUSY[l.id]=1;const ok=await publishLote(l,true);PUBBUSY[l.id]=0;if(!ok){PUBFAIL=true;break}}}
+      if(l.pubH!==hash(pubJson(x))){
+        if(Date.now()-(PUBLAST[l.id]||0)<120000){again=true;continue}
+        PUBBUSY[l.id]=1;const ok=await publishLote(l,true);PUBBUSY[l.id]=0;if(!ok){PUBFAIL=true;break}}}
+    clearTimeout(pubRe);if(again)pubRe=setTimeout(autoPub,125000)
   },4000)
 }
 const pubHead=()=>`<div class="fhead">${LOGO('#fff','#a9d97f')}<div><b>${esc(PLANTA_NOMBRE)}</b><span>${esc(PLANTA_LEMA)}</span></div></div>`;
-function pubMsg(t){$('pubView').innerHTML=pubHead()+`<div class="fcard" style="text-align:center">${esc(t)}</div>`}
-function renderPublic(d,upd){
-  const kv=(v,t)=>`<div><b>${v}</b><span>${t}</span></div>`,k3=(t,v)=>`<div><span>${t}</span><b>${v}</b></div>`;
-  const dias=d.f?Math.max(0,Math.round((parse(d.cierre||iso(new Date()))-parse(d.f))/864e5)):0;
-  let h=pubHead()+'<div class="fbar">SEGUIMIENTO DE SU LOTE</div>';
+function pubMsg(t){PUBD=null;$('pubView').innerHTML=pubHead()+`<div class="fcard" style="text-align:center">${esc(t)}</div>`}
+function pubClean(html){
+  const t=document.createElement('template');t.innerHTML=html;
+  t.content.querySelectorAll('script,iframe,object,embed,link,style,form,base,meta').forEach(n=>n.remove());
+  t.content.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{
+    const k=a.name.toLowerCase();
+    if(k.startsWith('on')||(/^(href|src|xlink:href|action|formaction)$/.test(k)&&!/^(https?:|#)/i.test(a.value.trim())))n.removeAttribute(a.name)}));
+  return t.innerHTML
+}
+function renderPublic(){
+  const d=PUBD;if(!d)return;const S=d.s||{};if(!S.res)return pubMsg('Esta ficha se está actualizando. Vuelve a intentarlo en un minuto.');if(!S[PUBTAB])PUBTAB='res';
+  let h=pubHead();
+  h+=PUBTAB==='res'?'<div class="fbar">FICHA COMPLETA DEL LOTE</div>':`<button type="button" class="btn sm" style="margin-bottom:8px" data-ft="res">← Ficha del lote</button><div class="mut" style="margin-bottom:6px">${esc(d.code)} · ${esc(d.name)}</div>`;
   if(PUBS)h+=`<div class="fsaco">Saco <b>${esc(PUBS)}</b>: pertenece al lote <b>${esc(d.code)}</b>.</div>`;
-  h+=`<div class="fcard"><div class="fcode"><b>${esc(d.code)}</b><span class="fst ${d.cerrado?'c':''}">${d.cerrado?'DESPACHADO':'ALMACENADO'}</span></div><div class="mut" style="margin-top:2px">${esc(d.name)} · ${esc(d.producto)}</div><div class="fgrid3">${k3('Peso actual',fk(d.peso))}${k3('Inicio de formación',dmy(d.f))}${k3('Días en lote',dias+' días')}</div></div>`;
-  h+='<div class="fgrid">'+kv(fk(d.ing),'Peso ingresado')+kv(fk(d.desp),'Despachado')+kv(d.sacos,'Sacos ingresados')+kv(dmy(d.last),'Última incorporación')+(d.cierre?kv(dmy(d.cierre),'Fecha de cierre'):'')+(d.ubic?kv(esc(d.ubic),'Ubicación'):'')+'</div>';
-  h+='<div class="fcard"><b>Composición del lote</b>'+(d.orig.length?d.orig.map(o=>`<div class="fo"><div><span>${esc(o.o)}${o.p||o.f?' · '+esc(o.p||'')+(o.f?' / '+esc(o.f):''):''}</span><b>${o.pc} % · ${fk(o.kg)}</b></div><i style="width:${Math.max(2,o.pc)}%"></i></div>`).join(''):'<div class="mut">Sin ingresos todavía.</div>')+'</div>';
-  h+='<div class="fcard"><b>Calidad</b><div class="fgrid3">'+k3('Humedad',d.hum!=null?fnum(d.hum)+' %':'—')+k3('Tipo',esc((d.tipos||[]).join(' / ')||'Cacao seco'))+k3('Proceso','Secado')+'</div></div>';
-  h+='<div class="fcard"><b>Movimientos del lote</b>'+(d.mov.length?d.mov.map(r=>`<div class="pubtl"><div><b>${esc(fshort(r.d))}</b> · ${esc(r.k)}</div><div class="fmov" style="display:block;border:0;padding:0"><div class="kg ${r.kg>=0?'in':'out'}">${r.kg>=0?'+':'−'}${fk(Math.abs(r.kg))}</div></div><div class="mut" style="grid-column:1/3;font-size:12px">Saldo ${fk(r.b)}</div></div>`).join(''):'<div class="mut">Sin movimientos.</div>')+'</div>';
-  h+=`<div class="ffoot"><span><b>${esc(PLANTA_NOMBRE)}</b><br>${esc(PLANTA_SUB)}</span><span style="text-align:right">Versión de ficha: ${p2(d.ver||1)}<br>Actualizado: ${tsf(d.upd||upd)}</span></div>`;
-  $('pubView').innerHTML=h
+  h+=pubClean(S[PUBTAB]);
+  $('pubView').innerHTML=h;
+  $('pubView').querySelectorAll('.pdays').forEach(s=>{const f=s.dataset.f;s.textContent=f?Math.max(0,Math.round((parse(s.dataset.c||iso(new Date()))-parse(f))/864e5))+' días':'—'})
 }
 function initPublic(){
   document.body.classList.add('pubmode');document.body.classList.remove('loading');updShown=true;
   pubMsg('Cargando la ficha…');
+  $('pubView').addEventListener('click',e=>{const b=e.target.closest('[data-ft]');if(b){PUBTAB=b.dataset.ft;renderPublic();scrollTo(0,0)}});
   try{
     firebase.initializeApp(firebaseConfig);fdb=firebase.firestore();
     fdb.collection('fichas_publicas').doc(PUBF).onSnapshot(s=>{
       if(!s.exists)return pubMsg('Esta ficha no está disponible. Pide a la planta un código actualizado.');
-      let d;try{d=JSON.parse(s.data().json)}catch(e){return pubMsg('No se pudo leer la ficha.')}
-      renderPublic(d,s.data().upd)
+      try{PUBD=JSON.parse(s.data().json)}catch(e){return pubMsg('No se pudo leer la ficha.')}
+      renderPublic()
     },e=>{console.warn(e);pubMsg(e&&e.code==='permission-denied'?'Esta ficha no está disponible.':'No se pudo cargar. Revisa tu conexión e intenta de nuevo.')})
   }catch(e){pubMsg('No se pudo cargar la ficha.')}
 }
