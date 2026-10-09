@@ -432,6 +432,11 @@ html[data-t=dark] .ffoot{background:#17463a;color:#a8ecd6}
 .pfr .one{display:block;font-size:4.2mm;font-weight:700}.pfr .sm{display:block;font-size:3.2mm}
 .pf-bc svg{width:100%;height:11mm;display:block}.pf-bc div{text-align:center;font-size:3.6mm;letter-spacing:.08em;margin-top:.5mm}
 .pf-f{position:absolute;left:4mm;right:4mm;bottom:3.5mm;display:flex;justify-content:space-between;gap:4mm;font-size:2.8mm;border-top:.3mm solid #cdd8d0;padding-top:1mm}
+
+#pubView{display:none}
+body.pubmode>*:not(#pubView){display:none!important}
+body.pubmode #pubView{display:block;max-width:560px;margin:0 auto;padding:14px 14px 40px;min-height:100vh}
+.pubtl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
 @media print{body.pf>*:not(#printArea){display:none!important}body.pf #printArea{display:block!important}html,body.pf{background:#fff!important;height:auto!important;overflow:visible!important}}
 </style></head>
 <body class="loading">
@@ -610,6 +615,7 @@ html[data-t=dark] .ffoot{background:#17463a;color:#a8ecd6}
 </div></div>
 
 <div id="fichaM" class="modal"><div class="sheet"><div id="fiB"></div></div></div>
+<div id="pubView"></div>
 <div id="printArea" aria-hidden="true"></div>
 <div id="metaM" class="modal"><div class="sheet"><h2>Datos del lote</h2><div class="sub" id="mtSub"></div>
 <div class="fg">
@@ -750,7 +756,7 @@ function toggleMenu(e){e.stopPropagation();const p=$('menuPanel'),o=p.hidden;p.h
 document.addEventListener('click',e=>{const p=$('menuPanel');if(p&&!p.hidden&&!p.contains(e.target))closeMenu()});
 document.getElementById('menuPanel').addEventListener('click',e=>{if(e.target.closest('button'))closeMenu()});
 let lastY=0;addEventListener('scroll',()=>{const y=Math.max(0,scrollY);if(Math.abs(y-lastY)<8)return;const n=document.querySelector('nav.tabs');if(n)n.classList.toggle('hide',y>lastY&&y>80);lastY=y},{passive:true});
-const APP_VER='1.9.1';
+const APP_VER='1.10.0';
 let updShown=false;
 async function checkUpdate(){if(updShown||!navigator.onLine)return;try{const r=await fetch(location.pathname+location.search,{cache:'no-store'});if(!r.ok)return;const m=(await r.text()).match(/APP_VER='([^']+)'/);if(m&&m[1]!==APP_VER){updShown=true;const ae=document.activeElement;if(!document.querySelector('.modal.show')&&!(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName))){location.reload();return}const b=document.createElement('div');b.id='updBar';b.innerHTML='<span>Hay una versión nueva de la app</span><button class="btn primary" onclick="location.reload()">Actualizar</button>';document.body.appendChild(b)}}catch(e){}}
 setInterval(checkUpdate,10*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});setTimeout(checkUpdate,8000);let loadT0=0,loadT=null;
@@ -842,7 +848,7 @@ function fail(e){console.error(e);if(e&&e.code==='permission-denied')alert('No t
 function netStatus(){const t=$('sst');t.dataset.s=navigator.onLine?'ok':'off';t.textContent=navigator.onLine?'Sincronizado':'Sin conexión: se guardará al reconectar'}
 window.addEventListener('online',netStatus);window.addEventListener('offline',netStatus);
 function startSync(){
-  stopSync();ready={};codesTried=false;document.body.classList.add('loading');$('sst').textContent='Cargando…';
+  stopSync();ready={};codesTried=false;PUBFAIL=false;document.body.classList.add('loading');$('sst').textContent='Cargando…';
   const names={sec_lotes:'lotes',sec_entradas:'entradas',sec_despachos:'despachos',sec_ciclos:'ciclos',sec_eventos:'eventos',sec_log:'log'};
   Object.keys(names).forEach(c=>{
     unsubs.push((c==='sec_log'?col(c).orderBy('ts','desc').limit(300):(c==='sec_ciclos'&&!FULL)?col(c).where('startAt','>=',Date.now()-365*864e5):(c==='sec_eventos'&&!FULL)?col(c).where('ts','>=',Date.now()-365*864e5):col(c)).onSnapshot(sn=>{
@@ -1545,7 +1551,7 @@ function setAppUrl(){
   if(fichaId&&$('fichaM').classList.contains('show'))renderFicha();return true
 }
 const ensureBase=()=>baseUrl()?true:setAppUrl();
-function loteUrl(l,saco){return (baseUrl()||location.href.split(/[?#]/)[0])+'?lote='+encodeURIComponent(lcode(l))+'&e='+encodeURIComponent(spaceUid||uid||'')+(saco?'&saco='+encodeURIComponent(saco):'')}
+function loteUrl(l,saco){const base=baseUrl()||location.href.split(/[?#]/)[0],t=pubTok(l);return t?base+'?f='+t+(saco?'&saco='+encodeURIComponent(saco):''):base+'?lote='+encodeURIComponent(lcode(l))+'&e='+encodeURIComponent(spaceUid||uid||'')+(saco?'&saco='+encodeURIComponent(saco):'')}
 function qrSvg(text,px){
   if(typeof qrcode!=='function')return '<div class="mut" style="padding:20px">QR no disponible sin conexión a internet</div>';
   try{const q=qrcode(0,'M');q.addData(text);q.make();const n=q.getModuleCount();let d='';
@@ -1555,6 +1561,7 @@ function qrSvg(text,px){
 }
 function qrCheck(){
   if(!(ready.sec_lotes&&ready.sec_entradas&&ready.sec_despachos&&ready.sec_ciclos&&ready.sec_eventos))return;
+  autoPub();
   if(!codesTried){codesTried=true;persistCodes()}
   if(PEND){
     const k=PEND,s=PEND_SACO;PEND=null;PEND_SACO=null;
@@ -1646,9 +1653,13 @@ function fichaBody(x,I,code){
     return T('Trazabilidad completa')+'<div class="fgrid">'+kv(esc(l.prev||'—'),'Lote anterior')+kv(tsf(I.upd),'Último movimiento')+kv(I.updBy?nm(I.updBy):'—','Último usuario')+kv(l.by?nm(l.by):'—','Creado por')+kv(esc(ubicTxt(l)||'Sin indicar'),'Ubicación')+kv('v'+p2(I.ver),'Versión de ficha')+'</div>'+
       '<b>Historial de actividad</b>'+(L.length?L.map(g=>`<div class="item"><div>${esc(g.txt)}<div class="mut">${g.by?nm(g.by):'—'} · ${tfmt(g.ts)}</div></div></div>`).join(''):'<div class="mut">No hay actividad registrada para este lote.</div>')
   }
-  const u=loteUrl(l);
-  const nb=!baseUrl();
-  return T('QR y etiquetas')+`<div style="text-align:center"><div class="qrbox">${qrSvg(u,220)}</div><div class="mut" style="word-break:break-all">${esc(u)}</div>${nb?'<div class="fsaco" style="margin-top:8px">Esta dirección solo funciona en este equipo. Configura la dirección web donde está publicada la app para que el QR abra la ficha desde cualquier teléfono.</div>':''}<div class="mut" style="margin-top:6px">Al escanearlo se abre esta ficha en modo consulta (hay que iniciar sesión).</div><div class="ma" style="justify-content:center"><button class="btn" onclick="printSacos('${l.id}')">Etiquetas QR de sacos</button><button class="btn" onclick="setAppUrl()">Dirección de la app</button></div></div>`
+  const tok=pubTok(l);
+  if(!tok){
+    if(canEdit()&&!PUBTRY[l.id]){PUBTRY[l.id]=1;publishLote(l,true).then(ok=>{if(!ok)PUBERR[l.id]=1;if(fichaId===l.id&&$('fichaM').classList.contains('show'))renderFicha()})}
+    return T('QR y etiquetas')+(PUBERR[l.id]?`<div class="fsaco">No se pudo publicar la ficha pública. ${RULES_HINT}</div><div class="ma"><button class="btn" onclick="PUBTRY['${l.id}']=0;PUBERR['${l.id}']=0;renderFicha()">Reintentar</button></div>`:canEdit()?'<div class="mut">Publicando la ficha pública…</div>':'<div class="mut">Un editor debe generar primero el QR de este lote.</div>')
+  }
+  const u=loteUrl(l),nb=!baseUrl();
+  return T('QR y etiquetas')+`<div style="text-align:center"><div class="qrbox">${qrSvg(u,220)}</div><div class="mut" style="word-break:break-all">${esc(u)}</div>${nb?'<div class="fsaco" style="margin-top:8px">Esta dirección solo funciona en este equipo. Configura la dirección web donde está publicada la app para que el QR abra la ficha desde cualquier teléfono.</div>':''}<div class="mut" style="margin:6px 0">Quien escanee este QR ve la ficha de seguimiento del lote sin iniciar sesión ni entrar al sistema. No muestra usuarios, calificaciones${PUB_PRODUCTOR?'':', productores, fincas'}${PUB_UBICACION?'':' ni ubicación'}.</div><div class="ma" style="justify-content:center"><button class="btn" onclick="window.open('${u}','_blank')">Ver ficha pública</button><button class="btn" onclick="printSacos('${l.id}')">Etiquetas QR de sacos</button><button class="btn" onclick="setAppUrl()">Dirección de la app</button></div></div>`
 }
 let metaId=null;
 function editMeta(id){
@@ -1685,8 +1696,8 @@ function runPrint(size){
   f.srcdoc=doc;document.body.appendChild(f)
 }
 addEventListener('afterprint',()=>{document.body.classList.remove('pf');const p=$('printArea');if(p)p.innerHTML='';const s=$('pgStyle');if(s)s.remove()});
-function printFicha(id){
-  if(!ensureBase())return;const x=LI[id];if(!x)return;const l=x.l,I=loteInfo(x),code=lcode(l),u=loteUrl(l);
+async function printFicha(id){
+  if(!ensureBase())return;if(!LI[id])return;if(!(await ensurePublished(LI[id].l)))return;const x=LI[id];if(!x)return;const l=x.l,I=loteInfo(x),code=lcode(l),u=loteUrl(l);
   const R=(t,v)=>`<p><span>${t}</span><b>${v}</b></p>`;
   const pesoIni=fk(x.ing);
   $('printArea').innerHTML=`<div class="pfc"><div class="pfh">${LOGO('#fff','#a9d97f')}<div class="pfh-b"><b>${esc(PLANTA_NOMBRE)}</b><i>${esc(PLANTA_LEMA)}</i></div><div class="pfh-m">PLANTA DE SECADO<br>FICHA DE IDENTIFICACIÓN DE LOTE</div><div class="pfh-t">TRAZABILIDAD<br>CALIDAD<br>SOSTENIBILIDAD</div></div>
@@ -1703,8 +1714,8 @@ function printFicha(id){
 <div class="pf-f"><span><b>${esc(PLANTA_NOMBRE)}</b> | ${esc(PLANTA_SUB)}</span><span>Versión de ficha: ${p2(I.ver)} | Actualizado: ${tsf(I.upd)}</span></div></div>`;
   logAct('imprimió la ficha del lote “'+l.name+'” ('+code+')');runPrint('210mm 148mm')
 }
-function printSacos(id){
-  if(!ensureBase())return;const x=LI[id];if(!x)return;const l=x.l,code=lcode(l);let n=Math.max(1,Math.round(x.stock/SACO));
+async function printSacos(id){
+  if(!ensureBase())return;if(!LI[id])return;if(!(await ensurePublished(LI[id].l)))return;const x=LI[id];if(!x)return;const l=x.l,code=lcode(l);let n=Math.max(1,Math.round(x.stock/SACO));
   const r=prompt('¿Cuántas etiquetas de saco imprimir? (una por saco, 10 por hoja A4)',n);if(r===null)return;
   n=Math.round(Number(r));if(!(n>=1&&n<=500))return alert('Escribe un número entre 1 y 500.');
   const w=n>99?3:2;let h='<div class="plb">';
@@ -1713,6 +1724,74 @@ function printSacos(id){
   $('printArea').innerHTML=h+'</div>';logAct('imprimió '+n+' etiquetas de saco del lote “'+l.name+'” ('+code+')');runPrint('A4')
 }
 
-applyTheme();decorate();initFirebase();render();
+/* ====== Ficha pública (sin iniciar sesión) ====== */
+const PUB_PRODUCTOR=false,PUB_UBICACION=false; /* true = mostrar productor/finca o ubicación en la ficha pública */
+const PUBF=new URLSearchParams(location.search).get('f'),PUBS=new URLSearchParams(location.search).get('saco');
+const RULES_HINT='Revisa tu conexión y que las reglas de Firestore permitan la colección fichas_publicas.';
+let PUBTOK={},PUBTRY={},PUBERR={},PUBBUSY={},PUBFAIL=false,pubT=null;
+const hash=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)};
+const newToken=()=>{const a=new Uint8Array(16);crypto.getRandomValues(a);return [...a].map(b=>b.toString(16).padStart(2,'0')).join('')};
+const pubTok=l=>l.pub||PUBTOK[l.id]||'';
+function pubPayload(x){
+  const l=x.l,I=loteInfo(x),tot=x.ing||1,og={};
+  I.OR.forEach(g=>{const k=(g.origin||'Sin indicar')+(PUB_PRODUCTOR?'|'+g.productor+'|'+g.finca:'');const o=og[k]||(og[k]={o:g.origin||'Sin indicar',kg:0,p:PUB_PRODUCTOR?g.productor:'',f:PUB_PRODUCTOR?g.finca:''});o.kg+=g.kg});
+  const orig=Object.values(og).map(o=>({...o,kg:r2(o.kg),pc:Math.round(o.kg/tot*100)})).sort((a,b)=>b.kg-a.kg);
+  const rr=[...I.E.map((e,i)=>({d:e.date,t:e.ts||0,kg:e.kg,k:i===0?'Creación del lote':'Incorporación'})),...I.D.map(d=>({d:d.date,t:d.ts||0,kg:-d.kg,k:'Despacho'}))].sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t);
+  let bal=0;const mov=rr.map(r=>{bal=r2(bal+r.kg);return {d:r.d,k:r.k,kg:r.kg,b:bal}});
+  return {code:lcode(l),name:l.name,producto:l.producto||'Cacao seco',cerrado:I.cerrado,peso:x.stock,ing:x.ing,desp:x.desp,sacos:I.sacks,f:I.f,last:I.last,cierre:I.closeDate,orig,mov,hum:(l.hum!=null&&l.hum!==''?l.hum:null),tipos:I.tipos,ubic:PUB_UBICACION?ubicTxt(l):'',ver:I.ver,upd:I.upd}
+}
+async function publishLote(l,force){
+  const x=LI[l.id];if(!x||!fdb)return false;
+  let tok=pubTok(l);const isNew=!tok;if(isNew){tok=newToken();PUBTOK[l.id]=tok}
+  const json=JSON.stringify(pubPayload(x)),h=hash(json);
+  if(!isNew&&!force&&l.pubH===h)return true;
+  const b=fdb.batch();
+  b.set(fdb.collection('fichas_publicas').doc(tok),{space:spaceUid||uid,json,upd:Date.now()});
+  b.update(col('sec_lotes').doc(l.id),{pub:tok,pubH:h});
+  try{await Promise.race([b.commit(),new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),9000))]);return true}
+  catch(e){console.warn('publicar',e);if(isNew)delete PUBTOK[l.id];return false}
+}
+async function ensurePublished(l){
+  if(!canEdit()){if(pubTok(l))return true;alert('Solo un editor puede generar el QR público de este lote.');return false}
+  toast('Publicando la ficha…');
+  if(await publishLote(l,true))return true;
+  alert('No se pudo publicar la ficha pública del lote, así que no se imprimió. '+RULES_HINT);return false
+}
+function autoPub(){
+  if(!canEdit()||!fdb||PUBFAIL)return;clearTimeout(pubT);
+  pubT=setTimeout(async()=>{
+    for(const l of db.lotes){if(!l.pub||PUBBUSY[l.id])continue;const x=LI[l.id];if(!x)continue;
+      if(l.pubH!==hash(JSON.stringify(pubPayload(x)))){PUBBUSY[l.id]=1;const ok=await publishLote(l,true);PUBBUSY[l.id]=0;if(!ok){PUBFAIL=true;break}}}
+  },4000)
+}
+const pubHead=()=>`<div class="fhead">${LOGO('#fff','#a9d97f')}<div><b>${esc(PLANTA_NOMBRE)}</b><span>${esc(PLANTA_LEMA)}</span></div></div>`;
+function pubMsg(t){$('pubView').innerHTML=pubHead()+`<div class="fcard" style="text-align:center">${esc(t)}</div>`}
+function renderPublic(d,upd){
+  const kv=(v,t)=>`<div><b>${v}</b><span>${t}</span></div>`,k3=(t,v)=>`<div><span>${t}</span><b>${v}</b></div>`;
+  const dias=d.f?Math.max(0,Math.round((parse(d.cierre||iso(new Date()))-parse(d.f))/864e5)):0;
+  let h=pubHead()+'<div class="fbar">SEGUIMIENTO DE SU LOTE</div>';
+  if(PUBS)h+=`<div class="fsaco">Saco <b>${esc(PUBS)}</b>: pertenece al lote <b>${esc(d.code)}</b>.</div>`;
+  h+=`<div class="fcard"><div class="fcode"><b>${esc(d.code)}</b><span class="fst ${d.cerrado?'c':''}">${d.cerrado?'DESPACHADO':'ALMACENADO'}</span></div><div class="mut" style="margin-top:2px">${esc(d.name)} · ${esc(d.producto)}</div><div class="fgrid3">${k3('Peso actual',fk(d.peso))}${k3('Inicio de formación',dmy(d.f))}${k3('Días en lote',dias+' días')}</div></div>`;
+  h+='<div class="fgrid">'+kv(fk(d.ing),'Peso ingresado')+kv(fk(d.desp),'Despachado')+kv(d.sacos,'Sacos ingresados')+kv(dmy(d.last),'Última incorporación')+(d.cierre?kv(dmy(d.cierre),'Fecha de cierre'):'')+(d.ubic?kv(esc(d.ubic),'Ubicación'):'')+'</div>';
+  h+='<div class="fcard"><b>Composición del lote</b>'+(d.orig.length?d.orig.map(o=>`<div class="fo"><div><span>${esc(o.o)}${o.p||o.f?' · '+esc(o.p||'')+(o.f?' / '+esc(o.f):''):''}</span><b>${o.pc} % · ${fk(o.kg)}</b></div><i style="width:${Math.max(2,o.pc)}%"></i></div>`).join(''):'<div class="mut">Sin ingresos todavía.</div>')+'</div>';
+  h+='<div class="fcard"><b>Calidad</b><div class="fgrid3">'+k3('Humedad',d.hum!=null?fnum(d.hum)+' %':'—')+k3('Tipo',esc((d.tipos||[]).join(' / ')||'Cacao seco'))+k3('Proceso','Secado')+'</div></div>';
+  h+='<div class="fcard"><b>Movimientos del lote</b>'+(d.mov.length?d.mov.map(r=>`<div class="pubtl"><div><b>${esc(fshort(r.d))}</b> · ${esc(r.k)}</div><div class="fmov" style="display:block;border:0;padding:0"><div class="kg ${r.kg>=0?'in':'out'}">${r.kg>=0?'+':'−'}${fk(Math.abs(r.kg))}</div></div><div class="mut" style="grid-column:1/3;font-size:12px">Saldo ${fk(r.b)}</div></div>`).join(''):'<div class="mut">Sin movimientos.</div>')+'</div>';
+  h+=`<div class="ffoot"><span><b>${esc(PLANTA_NOMBRE)}</b><br>${esc(PLANTA_SUB)}</span><span style="text-align:right">Versión de ficha: ${p2(d.ver||1)}<br>Actualizado: ${tsf(d.upd||upd)}</span></div>`;
+  $('pubView').innerHTML=h
+}
+function initPublic(){
+  document.body.classList.add('pubmode');document.body.classList.remove('loading');updShown=true;
+  pubMsg('Cargando la ficha…');
+  try{
+    firebase.initializeApp(firebaseConfig);fdb=firebase.firestore();
+    fdb.collection('fichas_publicas').doc(PUBF).onSnapshot(s=>{
+      if(!s.exists)return pubMsg('Esta ficha no está disponible. Pide a la planta un código actualizado.');
+      let d;try{d=JSON.parse(s.data().json)}catch(e){return pubMsg('No se pudo leer la ficha.')}
+      renderPublic(d,s.data().upd)
+    },e=>{console.warn(e);pubMsg(e&&e.code==='permission-denied'?'Esta ficha no está disponible.':'No se pudo cargar. Revisa tu conexión e intenta de nuevo.')})
+  }catch(e){pubMsg('No se pudo cargar la ficha.')}
+}
+
+applyTheme();decorate();if(PUBF)initPublic();else{initFirebase();render()}
 </script>
 </body></html>
